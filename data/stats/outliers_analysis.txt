@@ -1,0 +1,148 @@
+Figure : Détection des outliers - Analyse détaillée
+================================================================================
+
+Variable: person_age
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 1494
+  Pourcentage: 4.59%
+  Valeur min: 41.00
+  Valeur max: 144.00
+  Valeur moyenne: 46.91
+  Exemples d'indices (max 10): [81, 183, 575, 747, 29121, 29124, 29127, 29131, 29133, 29137]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 558
+  Pourcentage: 1.71%
+  Valeur min: 47.00
+  Valeur max: 144.00
+  Valeur moyenne: 53.53
+  Exemples d'indices (max 10): [81, 183, 575, 747, 29121, 29143, 29147, 29163, 29182, 29193]
+
+================================================================================
+
+Variable: person_income
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 1484
+  Pourcentage: 4.55%
+  Valeur min: 140300.00
+  Valeur max: 6000000.00
+  Valeur moyenne: 220508.94
+  Exemples d'indices (max 10): [15, 20, 33, 34, 42, 43, 44, 45, 46, 55]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 233
+  Pourcentage: 0.72%
+  Valeur min: 253000.00
+  Valeur max: 6000000.00
+  Valeur moyenne: 462094.99
+  Exemples d'indices (max 10): [15, 33, 34, 42, 43, 44, 45, 46, 55, 56]
+
+================================================================================
+
+Variable: person_emp_length
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 853
+  Pourcentage: 2.62%
+  Valeur min: 15.00
+  Valeur max: 123.00
+  Valeur moyenne: 17.78
+  Exemples d'indices (max 10): [0, 210, 17834, 17847, 17850, 17874, 17877, 17888, 17892, 17905]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 321
+  Pourcentage: 0.99%
+  Valeur min: 18.00
+  Valeur max: 123.00
+  Valeur moyenne: 21.06
+  Exemples d'indices (max 10): [0, 210, 17834, 17877, 17888, 17892, 17905, 17997, 18077, 18291]
+
+================================================================================
+
+Variable: loan_amnt
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 1689
+  Pourcentage: 5.18%
+  Valeur min: 23050.00
+  Valeur max: 35000.00
+  Valeur moyenne: 26504.85
+  Exemples d'indices (max 10): [0, 3, 4, 6, 7, 8, 10, 12, 13, 14]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 337
+  Pourcentage: 1.03%
+  Valeur min: 28800.00
+  Valeur max: 35000.00
+  Valeur moyenne: 32973.22
+  Exemples d'indices (max 10): [0, 3, 4, 6, 7, 8, 10, 12, 13, 14]
+
+================================================================================
+
+Variable: loan_int_rate
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 6
+  Pourcentage: 0.02%
+  Valeur min: 22.06
+  Valeur max: 23.22
+  Valeur moyenne: 22.35
+  Exemples d'indices (max 10): [6449, 13499, 18829, 27425, 27851, 29277]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 38
+  Pourcentage: 0.12%
+  Valeur min: 20.86
+  Valeur max: 23.22
+  Valeur moyenne: 21.39
+  Exemples d'indices (max 10): [523, 1827, 2436, 2897, 4899, 6449, 7075, 7470, 9209, 10723]
+
+================================================================================
+
+Variable: loan_percent_income
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 651
+  Pourcentage: 2.0%
+  Valeur min: 0.45
+  Valeur max: 0.83
+  Valeur moyenne: 0.51
+  Exemples d'indices (max 10): [0, 2, 3, 4, 6, 11, 22, 25, 28, 36]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 336
+  Pourcentage: 1.03%
+  Valeur min: 0.50
+  Valeur max: 0.83
+  Valeur moyenne: 0.55
+  Exemples d'indices (max 10): [0, 2, 3, 4, 22, 28, 36, 75, 107, 108]
+
+================================================================================
+
+Variable: cb_person_cred_hist_length
+--------------------------------------------------------------------------------
+Méthode IQR (Q1 - 1.5×IQR, Q3 + 1.5×IQR):
+  Nombre d'outliers: 1142
+  Pourcentage: 3.51%
+  Valeur min: 16.00
+  Valeur max: 30.00
+  Valeur moyenne: 18.31
+  Exemples d'indices (max 10): [29120, 29125, 29127, 29130, 29133, 29134, 29138, 29141, 29142, 29151]
+
+Méthode Z-score (|z| > 3):
+  Nombre d'outliers: 284
+  Pourcentage: 0.87%
+  Valeur min: 18.00
+  Valeur max: 30.00
+  Valeur moyenne: 23.85
+  Exemples d'indices (max 10): [32297, 32298, 32299, 32300, 32301, 32302, 32303, 32304, 32305, 32306]
+
+================================================================================
+
+RÉSUMÉ GLOBAL
+================================================================================
+Total d'outliers détectés (méthode IQR): 7319
+Total d'outliers détectés (méthode Z-score): 2107
+Nombre de variables analysées: 7

@@ -1,44 +1,50 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -O2 -std=c99 -D_POSIX_C_SOURCE=200809L
-LDFLAGS = -lm
+# Root Makefile - delegates to c/Makefile
+# Run from project root: make, make run, make results, etc.
 
-SRC_DIR = src
-BUILD_DIR = build
-TARGET = $(BUILD_DIR)/credit_risk_predictor
+.PHONY: all clean run results plots plots-all compare verify regenerate help
+.PHONY: threshold_analysis prepare_dataset learning_rate_experiment iterations_experiment outlier_values
 
-# Source files
-SRCS = $(SRC_DIR)/main.c \
-       $(SRC_DIR)/utils/utils.c \
-       $(SRC_DIR)/utils/memory_manager.c \
-       $(SRC_DIR)/utils/csv_parser.c \
-       $(SRC_DIR)/data/data_loader.c \
-       $(SRC_DIR)/data/data_splitter.c \
-       $(SRC_DIR)/preprocessing/preprocessing.c \
-       $(SRC_DIR)/preprocessing/scaler.c \
-       $(SRC_DIR)/preprocessing/encoder.c \
-       $(SRC_DIR)/models/logistic_regression.c \
-       $(SRC_DIR)/models/decision_tree.c \
-       $(SRC_DIR)/evaluation/metrics.c \
-       $(SRC_DIR)/evaluation/confusion_matrix.c
-
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
-
-.PHONY: all clean run
-
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-	@echo "Build complete: $(TARGET)"
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+all:
+	$(MAKE) -C c all
 
 clean:
-	rm -rf $(BUILD_DIR)/*.o $(BUILD_DIR)/*/*.o $(TARGET)
-	@echo "Clean complete"
+	$(MAKE) -C c clean
 
-run: $(TARGET)
-	./$(TARGET)
+run: all
+	$(MAKE) -C c run
+
+results: all
+	$(MAKE) -C c results
+
+plots: results
+	$(MAKE) -C c plots
+
+plots-all:
+	$(MAKE) -C c plots-all
+
+compare: results
+	$(MAKE) -C c compare
+
+verify:
+	$(MAKE) -C c verify
+
+regenerate:
+	$(MAKE) -C c regenerate
+
+help:
+	$(MAKE) -C c help
+
+threshold_analysis:
+	$(MAKE) -C c threshold_analysis
+
+prepare_dataset:
+	$(MAKE) -C c prepare_dataset
+
+learning_rate_experiment:
+	$(MAKE) -C c learning_rate_experiment
+
+iterations_experiment:
+	$(MAKE) -C c iterations_experiment
+
+outlier_values:
+	$(MAKE) -C c outlier_values

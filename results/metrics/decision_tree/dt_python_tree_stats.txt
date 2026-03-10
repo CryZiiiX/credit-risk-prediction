@@ -1,0 +1,13 @@
+============================================================
+STATISTIQUES ARBRE DE DÉCISION - SCIKIT-LEARN (PYTHON)
+============================================================
+
+Profondeur réelle: 7
+Nombre total de nœuds: 101
+Temps d'entraînement: environ 0.035 secondes
+
+Hyperparamètres:
+  - max_depth: 7
+  - min_samples_split: 20
+  - min_samples_leaf: 10
+  - criterion: gini

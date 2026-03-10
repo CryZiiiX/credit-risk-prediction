@@ -105,11 +105,11 @@ Le projet utilise les bibliothèques suivantes pour l'analyse et la comparaison 
 
 | Bibliothèque | Version Minimale | Rôle dans le Projet | Installation |
 |--------------|------------------|---------------------|--------------|
-| **pandas** | >= 1.5.0 | Manipulation et chargement des données CSV | Automatique via pip |
-| **numpy** | >= 1.23.0 | Calculs numériques, dépendance de pandas et scikit-learn | Automatique (dépendance) |
-| **matplotlib** | >= 3.6.0 | Visualisation des données et résultats | Automatique via pip |
-| **seaborn** | >= 0.12.0 | Visualisations statistiques avancées | Automatique via pip |
-| **scikit-learn** | >= 1.2.0 | Comparaison des implémentations C avec modèles de référence | Automatique via pip |
+| **pandas** | >= 1.5.0 | Manipulation et chargement des données CSV. Utilisée dans tous les scripts (explore_data.py, plot_results.py, compare_with_sklearn.py, split_dataset.py, analyze_missing_values.py) | Automatique via pip |
+| **numpy** | >= 1.23.0 | Calculs numériques, dépendance de pandas, scikit-learn et matplotlib. Utilisée directement dans plot_results.py, compare_with_sklearn.py, explore_data.py, analyze_missing_values.py | Automatique (dépendance) |
+| **matplotlib** | >= 3.6.0 | Visualisation des données et résultats (matrices de confusion, courbes ROC, métriques). Utilisée dans plot_results.py et explore_data.py. Inclut mpl_toolkits (make_axes_locatable) | Automatique via pip |
+| **seaborn** | >= 0.12.0 | Visualisations statistiques avancées (distributions, corrélations). Utilisée uniquement dans explore_data.py | Automatique via pip |
+| **scikit-learn** | >= 1.2.0 | Comparaison des implémentations C avec modèles de référence (LogisticRegression, DecisionTreeClassifier, StandardScaler, LabelEncoder, métriques). Utilisée dans compare_with_sklearn.py et split_dataset.py | Automatique via pip |
 
 **Note** : Les versions installées peuvent être supérieures aux versions minimales spécifiées, selon les dernières versions disponibles sur PyPI au moment du build.
 

@@ -1,0 +1,25 @@
+================================================================================
+ANALYSE DES POIDS - REGRESSION LOGISTIQUE C
+================================================================================
+
+Tableau des poids et importance :
+
+Feature                   Poids (w)    |w|        Rang   Interprétation
+--------------------------------------------------------------------------------
+loan_int_rate             +0.599       0.599      1      ↑ Taux d'intérêt → ↑ Risque de défaut (influence modérée)
+person_home_ownership     -0.588       0.588      2      Propriétaire → ↓ Risque de défaut (influence modérée)
+cb_person_default_on_file +0.533       0.533      3      Historique de défaut → ↑ Risque de défaut (influence modérée)
+loan_grade                +0.404       0.404      4      Grade moins bon (A→G) → ↑ Risque de défaut (effet modéré)
+loan_intent               +0.369       0.369      5      Effet dépendant du type de prêt (effet modéré)
+loan_percent_income       +0.369       0.369      6      ↑ Ratio prêt/revenu → ↑ Risque de défaut (effet modéré)
+loan_amnt                 +0.328       0.328      7      ↑ Montant emprunté → ↑ Risque de défaut (effet modéré)
+person_income             -0.242       0.242      8      ↑ Revenu → ↓ Risque de défaut (effet modéré)
+cb_person_cred_hist_length +0.133       0.133      9      ↑ Ancienneté du crédit → ↑ Risque de défaut (effet faible)
+person_age                -0.045       0.045      10     ↑ Âge → ↓ Risque de défaut (effet faible)
+person_emp_length         +0.015       0.015      11     ↑ Ancienneté professionnelle → ↑ Risque de défaut (effet faible)
+--------------------------------------------------------------------------------
+
+Biais (intercept): -1.400551
+Nombre de features: 11
+Learning rate: 0.010000
+Max iterations: 1000

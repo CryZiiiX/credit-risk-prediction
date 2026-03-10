@@ -1,0 +1,16 @@
+================================================================================
+INFORMATIONS SUR LE SPLIT
+================================================================================
+
+Fichier d'origine: data/raw/credit_risk_dataset.csv
+Random state: 42
+Test size: 0.2 (20%)
+Train size: 0.8 (80%)
+
+Fichiers générés:
+  - data/processed/train.csv (prétraité, non normalisé)
+  - data/processed/test.csv (prétraité, non normalisé)
+  - data/processed/scaler_params.txt
+
+Note: Les datasets sont prétraités (encodage catégoriel) mais pas normalisés.
+      La normalisation sera appliquée lors de l'entraînement.

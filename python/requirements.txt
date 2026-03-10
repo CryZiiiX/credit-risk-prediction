@@ -1,0 +1,111 @@
+# ============================================================================
+# Dépendances Python pour les Scripts d'Analyse et de Visualisation
+# ============================================================================
+#
+# Ce fichier contient toutes les dépendances Python nécessaires pour exécuter
+# les scripts d'analyse, de visualisation et de comparaison du projet.
+#
+# Installation :
+#   pip install -r requirements.txt
+#
+# Version Python requise : 3.8+ (Python 3.11 recommandé, voir VERSIONS.md)
+#
+# ============================================================================
+
+# ============================================================================
+# CORE - Dépendances Essentielles
+# ============================================================================
+# Bibliothèques fondamentales pour la manipulation de données et les calculs
+# numériques. Utilisées par tous les scripts du projet.
+#
+# Scripts utilisant ces dépendances :
+#   - scripts/explore_data.py (pandas, numpy, matplotlib, seaborn)
+#   - scripts/plot_results.py (pandas, numpy, matplotlib)
+#   - scripts/compare_with_sklearn.py (pandas, numpy, scikit-learn)
+#   - scripts/split_dataset.py (pandas, scikit-learn)
+#   - scripts/analyze_missing_values.py (pandas, numpy)
+
+# Manipulation de données tabulaires (CSV, DataFrames)
+# Utilisée dans tous les scripts pour charger, transformer et analyser le dataset
+# Scripts : explore_data.py, plot_results.py, compare_with_sklearn.py, split_dataset.py, analyze_missing_values.py
+pandas>=1.5.0
+
+# Calculs numériques et opérations sur tableaux multidimensionnels
+# Dépendance de pandas, scikit-learn et matplotlib
+# Utilisée directement dans : plot_results.py, compare_with_sklearn.py, explore_data.py, analyze_missing_values.py
+numpy>=1.23.0
+
+# ============================================================================
+# VISUALISATION - Génération de Graphiques
+# ============================================================================
+# Bibliothèques pour créer des visualisations professionnelles des résultats
+# (matrices de confusion, courbes ROC, métriques, etc.)
+#
+# Scripts utilisant ces dépendances :
+#   - scripts/plot_results.py (génération de 17 graphiques avec matplotlib)
+#   - scripts/explore_data.py (exploration du dataset avec matplotlib et seaborn)
+
+# Bibliothèque principale de visualisation
+# Utilisée pour créer tous les graphiques (matrices de confusion, ROC, métriques, etc.)
+# Note : Inclut automatiquement mpl_toolkits (utilisé par plot_results.py pour make_axes_locatable)
+# Scripts : plot_results.py, explore_data.py
+matplotlib>=3.6.0
+
+# Visualisations statistiques avancées
+# Utilisée pour les graphiques d'exploration de données (distributions, corrélations)
+# Scripts : explore_data.py uniquement
+seaborn>=0.12.0
+
+# ============================================================================
+# MACHINE LEARNING - Comparaison avec Scikit-learn
+# ============================================================================
+# Bibliothèques pour valider l'implémentation C en comparant avec scikit-learn
+#
+# Scripts utilisant ces dépendances :
+#   - scripts/compare_with_sklearn.py (validation des implémentations C avec LogisticRegression, DecisionTreeClassifier, métriques)
+#   - scripts/split_dataset.py (division stratifiée train/test avec train_test_split)
+
+# Bibliothèque de référence pour l'apprentissage automatique
+# Utilisée pour comparer les résultats de l'implémentation C avec des modèles
+# de référence (LogisticRegression, DecisionTreeClassifier, StandardScaler, LabelEncoder)
+# Utilise également les métriques : accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score, roc_curve
+# Note : Installe automatiquement scipy, joblib, threadpoolctl
+# Scripts : compare_with_sklearn.py, split_dataset.py
+scikit-learn>=1.2.0
+
+# ============================================================================
+# NOTES SUR LES DÉPENDANCES TRANSITIVES
+# ============================================================================
+#
+# Les dépendances suivantes sont installées automatiquement via les packages
+# principaux et ne nécessitent pas d'être spécifiées explicitement :
+#
+# Via scikit-learn :
+#   - scipy>=1.3.2 (calculs scientifiques)
+#   - joblib>=1.1.1 (parallélisation)
+#   - threadpoolctl>=2.0.0 (contrôle des threads)
+#
+# Via pandas :
+#   - python-dateutil>=2.8.1 (gestion des dates)
+#   - pytz>=2020.1 (fuseaux horaires)
+#
+# Via matplotlib :
+#   - pillow>=6.2.0 (traitement d'images)
+#   - pyparsing>=2.2.1 (parsing)
+#   - mpl_toolkits (outils avancés, inclus automatiquement avec matplotlib)
+#
+# Via seaborn :
+#   - Dépend de matplotlib, numpy et pandas (déjà listés)
+#
+# ============================================================================
+# COMPATIBILITÉ
+# ============================================================================
+#
+# Ce fichier est compatible avec :
+#   - Python 3.8 à 3.12
+#   - Python 3.11 recommandé (voir VERSIONS.md pour l'environnement Docker)
+#
+# Pour plus d'informations sur les versions exactes testées et validées,
+# consultez le fichier VERSIONS.md à la racine du projet.
+#
+# ============================================================================

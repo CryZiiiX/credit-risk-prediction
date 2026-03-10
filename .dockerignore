@@ -1,22 +1,66 @@
-# Ignorer les fichiers de build locaux
+# ============================================================================
+# .dockerignore - Fichiers à exclure du contexte Docker
+# ============================================================================
+# Ce fichier spécifie les fichiers et dossiers à ignorer lors de la copie
+# du contexte dans l'image Docker. Cela réduit la taille de l'image et
+# accélère le build en évitant de copier des fichiers inutiles.
+# ============================================================================
+
+# Fichiers de build et compilation (recompilés dans le container)
 build/
+c/build/
 *.o
 *.bin
+*.a
+*.so
 
-# Ignorer les résultats locaux
-results/
+# Modèles sauvegardés (générés lors de l'exécution)
 models/*.bin
+models/*.txt
+results/models/*.bin
 
-# Ignorer les environnements virtuels Python
+# Résultats générés (métriques, graphiques, logs)
+results/
+*.log
+
+# Datasets prétraités (générés lors de l'exécution)
+data/processed/
+
+# Environnements virtuels Python (non nécessaires dans Docker)
 venv/
+env/
+.venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
 
-# Ignorer les fichiers de configuration IDE
+# Fichiers de configuration IDE (non nécessaires dans Docker)
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# Ignorer Git
+# Fichiers Git (non nécessaires dans l'image)
 .git/
 .gitignore
+.gitattributes
+
+# Documentation de développement (optionnel, peut être inclus si nécessaire)
+# docs/presentation/
+# docs/rapport/
+
+# Fichiers temporaires et cache
+*.tmp
+*.temp
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
 

@@ -2,6 +2,7 @@
 # build/*.o
 # build/*/*.o
 # build/credit_risk_predictor
+# c/build/
 
 # Data files (commenté pour inclure dans le repo)
 # data/raw/*.csv

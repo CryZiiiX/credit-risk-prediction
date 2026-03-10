@@ -1,0 +1,13 @@
+================================================================================
+PERFORMANCE COMPUTATIONNELLE - REGRESSION LOGISTIQUE
+================================================================================
+
+Opération                                    Temps (secondes)     Pourcentage du total     
+--------------------------------------------------------------------------------
+Chargement CSV + encodage                     0.024                5.7                      %
+Prétraitement (imputation + shuffle)         0.000                0.0                      %
+Normalisation (fit + transform)               0.000                0.1                      %
+Entraînement (1000 itérations)              0.403                93.9                     %
+Évaluation (prédictions + métriques)       0.002                0.4                      %
+--------------------------------------------------------------------------------
+TOTAL                                         0.430                100.0                    %
