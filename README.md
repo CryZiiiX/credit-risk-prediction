@@ -425,4 +425,4 @@ Le projet inclut une documentation académique complète :
 
 ---
 
-**Dernière mise à jour** : Décembre 2025
+**Dernière mise à jour** : Mars 2026
