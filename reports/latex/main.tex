@@ -1,0 +1,270 @@
+% ======================================================================================
+% Nom     : reports/latex/main.tex
+% Rôle    : Fichier principal du rapport LaTeX, assemble la page de garde, les sections et la bibliographie.
+% Auteur  : Maxime BRONNY
+% Version : V1
+% Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+%           Master 1 Informatique Big Data
+% Usage   : Compiler avec latexmk -pdf main.tex depuis le dossier reports/latex.
+% ======================================================================================
+
+% ============================================================================
+% Rapport de projet - Techniques d'Apprentissage Artificiel (M1)
+% Prédiction du Risque de Crédit Bancaire (pipeline Python from scratch)
+%
+% Compilation (bibliographie intégrée, bibtex non requis) :
+%   pdflatex main.tex && pdflatex main.tex
+% ou, si latexmk est installé :
+%   latexmk -pdf main.tex
+% ============================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+% ===== Encodage, langue et police (Latin Modern, rendu LaTeX classique) =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}            % micro-ajustements typographiques (gris plus régulier)
+
+% Titres en français : « Sommaire » et « Bibliographie »
+\addto\captionsfrench{\renewcommand{\contentsname}{Sommaire}}
+\addto\captionsfrench{\renewcommand{\refname}{Bibliographie}}
+
+% ===== Mise en page =====
+\usepackage[margin=2.5cm,headheight=14pt]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+% Paragraphes en bloc (sans alinéa, séparés par un peu d'espace), pour un rendu
+% plus aéré et plus homogène, conforme au style du rapport de référence.
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\usepackage{array}                % modificateurs de colonnes >{...} et \extrarowheight
+\usepackage{longtable}            % glossaire aligné sur deux colonnes, multi-pages
+\usepackage{enumitem}             % espacement homogène et sobre des listes
+\setlist[itemize]{label=-, topsep=0.35em, itemsep=0.25em, parsep=0pt, leftmargin=1.6em}
+\setlist[enumerate]{topsep=0.35em, itemsep=0.25em, parsep=0pt, leftmargin=1.8em}
+
+% ===== Figures et tableaux =====
+\usepackage{graphicx}
+% Les figures sont lues directement depuis les sorties du programme :
+%   reports/figures/        : figures générées par python3 main.py
+%   data/stats/             : figures d'exploration des données (EDA)
+%   reports/latex/figures/  : figures propres au rapport (schémas, etc.)
+\graphicspath{{../figures/}{figures/}{../../data/stats/}}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+% Séparateur de légende en tiret simple : « Table 1 - ... » (et non « Table 1 – ... »)
+\DeclareCaptionLabelSeparator{tiret}{ - }
+\captionsetup{font=small,labelfont=bf,margin=0.8cm,labelsep=tiret}
+% Espacement sobre et homogène autour des figures et tableaux.
+\setlength{\textfloatsep}{1.2em}
+\setlength{\floatsep}{1em}
+\setlength{\intextsep}{1em}
+
+% ===== Maths =====
+\usepackage{amsmath,amssymb}
+
+% ===== Titres de sections : centrés, avec une ligne pleine largeur dessous =====
+\usepackage{titlesec}
+% Chaque grande partie commence sur une nouvelle page. On n'ajoute PAS de
+% \vspace* au-dessus du titre : en haut de page, un \vspace* fait basculer le
+% titre sur une « deuxième ligne » et lui ajoute \topskip + une interligne
+% complète (~1 cm de blanc en trop). Sans lui, le titre est la première ligne
+% et reste haut, à une distance équilibrée de l'en-tête (~1,2 cm), proche du
+% modèle visuel souhaité.
+\newcommand{\sectionbreak}{\clearpage}
+% Titre principal centré, suivi d'un filet fin sur toute la largeur du texte.
+% Espaces équilibrés : titre -> filet (0.6em), puis filet -> texte (1.7em).
+\titleformat{\section}[block]
+  {\LARGE\bfseries\filcenter}     % grand, gras, centré
+  {\thesection.}{0.6em}{}         % numéro . puis titre
+  [{\vspace{0.6em}\titlerule[0.6pt]}]   % ligne horizontale pleine largeur
+\titlespacing*{\section}{0pt}{0pt}{1.7em}
+% Sous-sections et sous-sous-sections : sobres, alignées à gauche, numéro suivi
+% d'un point (homogène avec les sections), bien détachées du paragraphe précédent.
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\subsection}{0pt}{1.7em}{0.7em}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection.}{0.6em}{}
+\titlespacing*{\subsubsection}{0pt}{1.3em}{0.5em}
+
+% ===== En-têtes et pieds de page =====
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small UE - Techniques d'apprentissage artificiel}
+\fancyhead[R]{\small Master 1 Big Data - Université Paris 8}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ===== Liens et code =====
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}                 % coupe proprement les URL longues de la bibliographie
+\usepackage{listings}
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries,
+  showstringspaces=false,
+  frame=single,
+  breaklines=true,
+  literate={é}{{\'e}}1 {è}{{\`e}}1 {à}{{\`a}}1 {ç}{{\c{c}}}1 {ê}{{\^e}}1
+           {î}{{\^\i}}1 {ô}{{\^o}}1 {û}{{\^u}}1 {É}{{\'E}}1 {È}{{\`E}}1
+}
+
+\begin{document}
+
+% Puces de liste en tiret simple (le français babel utilise sinon un tiret long).
+\renewcommand{\labelitemi}{-}
+\renewcommand{\labelitemii}{-}
+\renewcommand{\labelitemiii}{-}
+
+% ============================================================================
+% Page de garde
+% ============================================================================
+\begin{titlepage}
+  \centering
+
+  {\large Université Paris 8 - Vincennes-Saint-Denis\\[0.3em]
+   Master 1 Big Data\par}
+
+  \vspace{2.2cm}
+
+  {\Large Projet de\\[0.4em]
+   {\bfseries Techniques d'Apprentissage Artificiel}\par}
+
+  \vspace{2.2cm}
+
+  \rule{\linewidth}{0.8pt}\\[1.4em]
+  {\huge\bfseries Prédiction du Risque\\[0.4em] de Crédit Bancaire\par}
+  \vspace{1.1em}
+  {\large Comparaison de trois méthodes d'apprentissage supervisé\\[0.2em]
+   implémentées \emph{from scratch} en Python\par}
+  \vspace{1.4em}
+  \rule{\linewidth}{0.8pt}
+
+  \vfill
+
+  {\large\bfseries Maxime BRONNY\\[0.3em]}
+  {\large N\textsuperscript{o} étudiant : 19009314\par}
+  % Enseignante : à compléter si souhaité
+  % {\large Enseignante : Mme ...\par}
+
+  \vspace{1.6cm}
+
+  {\large Année universitaire 2025-2026\\[0.3em]
+   Rendu : juin 2026\par}
+
+\end{titlepage}
+
+% ============================================================================
+% Pages liminaires : sommaire puis glossaire (numérotation romaine)
+% ============================================================================
+\pagenumbering{roman}
+\tableofcontents
+
+\input{sections/00_glossaire}
+
+% ============================================================================
+% Corps du rapport (numérotation arabe)
+% ============================================================================
+\clearpage
+\pagenumbering{arabic}
+
+\input{sections/01_introduction}
+\input{sections/02_contexte_problematique}
+\input{sections/03_donnees}
+\input{sections/04_pretraitement}
+\input{sections/05_methodologie}
+\input{sections/06_algorithmes}
+\input{sections/07_resultats}
+\input{sections/08_analyse_critique}
+\input{sections/09_limites_ameliorations}
+\input{sections/10_conclusion}
+
+% ============================================================================
+% Bibliographie
+% ============================================================================
+% Bibliographie intégrée (thebibliography, sans BibTeX) : garantit des tirets
+% simples dans les plages de pages et un contrôle direct de la présentation.
+% Chaque référence a été vérifiée (auteurs, année, revue, pages, DOI/URL).
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Bibliographie}
+\begin{thebibliography}{10}
+
+\bibitem{breiman1984cart}
+Leo Breiman, Jerome Friedman, Richard Olshen et Charles Stone.
+\newblock {\em Classification and Regression Trees}.
+\newblock Wadsworth \& Brooks/Cole, 1984.
+\newblock Ouvrage fondateur de l'arbre de décision CART implémenté dans le projet.
+
+\bibitem{cover1967knn}
+Thomas M. Cover et Peter E. Hart.
+\newblock Nearest neighbor pattern classification.
+\newblock {\em IEEE Transactions on Information Theory}, 13(1):21-27, 1967.
+\newblock DOI~: \href{https://doi.org/10.1109/TIT.1967.1053964}{10.1109/TIT.1967.1053964}.
+  Article fondateur de la méthode des $k$ plus proches voisins.
+
+\bibitem{fawcett2006roc}
+Tom Fawcett.
+\newblock An introduction to {ROC} analysis.
+\newblock {\em Pattern Recognition Letters}, 27(8):861-874, 2006.
+\newblock DOI~: \href{https://doi.org/10.1016/j.patrec.2005.10.010}{10.1016/j.patrec.2005.10.010}.
+  Référence sur la courbe ROC et l'AUC employées pour comparer les modèles.
+
+\bibitem{harris2020numpy}
+Charles R. Harris, K. Jarrod Millman, Stéfan J. van der Walt et al.
+\newblock Array programming with {NumPy}.
+\newblock {\em Nature}, 585(7825):357-362, 2020.
+\newblock DOI~: \href{https://doi.org/10.1038/s41586-020-2649-2}{10.1038/s41586-020-2649-2}.
+  Bibliothèque de calcul numérique, base de toutes les implémentations \emph{from scratch}.
+
+\bibitem{hosmer2000logistic}
+David W. Hosmer et Stanley Lemeshow.
+\newblock {\em Applied Logistic Regression}.
+\newblock John Wiley \& Sons, 2\textsuperscript{e} édition, 2000.
+\newblock DOI~: \href{https://doi.org/10.1002/0471722146}{10.1002/0471722146}.
+  Ouvrage de référence sur la régression logistique.
+
+\bibitem{hunter2007matplotlib}
+John D. Hunter.
+\newblock Matplotlib: a 2{D} graphics environment.
+\newblock {\em Computing in Science \& Engineering}, 9(3):90-95, 2007.
+\newblock DOI~: \href{https://doi.org/10.1109/MCSE.2007.55}{10.1109/MCSE.2007.55}.
+  Bibliothèque utilisée pour générer toutes les figures du rapport.
+
+\bibitem{kaggle_credit_risk}
+laotse.
+\newblock Credit Risk Dataset - jeu de données de risque de crédit utilisé dans
+  le projet (32\,581 dossiers, licence CC0).
+\newblock Kaggle, 2020.
+  \url{https://www.kaggle.com/datasets/laotse/credit-risk-dataset}.
+  Consulté en juin 2026.
+
+\bibitem{mckinney2010pandas}
+Wes McKinney.
+\newblock Data structures for statistical computing in {Python}.
+\newblock {\em Proceedings of the 9th Python in Science Conference}, pages 56-61, 2010.
+\newblock DOI~: \href{https://doi.org/10.25080/Majora-92bf1922-00a}{10.25080/Majora-92bf1922-00a}.
+  Bibliothèque pandas, utilisée pour le chargement et la manipulation des données.
+
+\bibitem{pedregosa2011sklearn}
+Fabian Pedregosa, Gaël Varoquaux, Alexandre Gramfort et al.
+\newblock Scikit-learn: machine learning in {Python}.
+\newblock {\em Journal of Machine Learning Research}, 12:2825-2830, 2011.
+\newblock \url{https://jmlr.org/papers/v12/pedregosa11a.html}.
+  Bibliothèque utilisée uniquement pour vérifier les implémentations \emph{from scratch}.
+
+\bibitem{python_psf}
+Python Software Foundation.
+\newblock Python - langage de programmation utilisé pour l'ensemble de
+  l'implémentation du projet.
+\newblock \url{https://www.python.org/}, 1991. Consulté en juin 2026.
+
+\end{thebibliography}
+
+\end{document}

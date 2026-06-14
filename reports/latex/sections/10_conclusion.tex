@@ -1,0 +1,70 @@
+% ======================================================================================
+% Nom     : reports/latex/sections/10_conclusion.tex
+% Rôle    : Section de conclusion du rapport.
+% Auteur  : Maxime BRONNY
+% Version : V1
+% Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+%           Master 1 Informatique Big Data
+% Usage   : Fichier inclus dans main.tex lors de la compilation du rapport.
+% ======================================================================================
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\subsection{Bilan du travail réalisé}
+
+Ce projet a permis de construire un pipeline d'apprentissage automatique
+complet et reproductible pour la prédiction du risque de crédit bancaire :
+chargement et nettoyage de 32\,581 dossiers, encodage des variables
+catégorielles, découpage stratifié en trois ensembles ($70/15/15$), imputation
+et normalisation sans fuite de données, entraînement de trois modèles de
+familles différentes implémentés from scratch en Python, sélection des
+hyperparamètres sur l'ensemble de validation, évaluation finale unique sur
+l'ensemble de test, et génération automatique des métriques
+(\texttt{results/metrics.json}) et des figures. L'ensemble s'exécute en une
+seule commande et une vingtaine de secondes, et la justesse des trois
+implémentations a été validée par comparaison avec scikit-learn (écarts d'AUC
+inférieurs ou égaux à $5 \times 10^{-4}$).
+
+\subsection{Réponse à la problématique}
+
+Oui, le risque de défaut est prédictible avec une fiabilité utile à partir des
+seules caractéristiques du dossier, et la comparaison désigne clairement
+\textbf{l'arbre de décision} comme le meilleur compromis : F1 de $0{,}817$,
+AUC de $0{,}909$ et une précision de $0{,}977$ qui rend ses alertes presque
+toujours fondées, devant le $k$-NN (F1 $0{,}683$) et la régression logistique
+(F1 $0{,}626$). La réponse doit cependant être nuancée par le plafond commun
+des trois modèles : environ $30\,\%$ des défauts restent indétectés, limite qui
+semble tenir à l'information disponible dans les données plus qu'aux
+algorithmes eux-mêmes. Un déploiement réel exigerait donc soit des variables
+supplémentaires, soit l'acceptation explicite de ce risque résiduel.
+
+\subsection{Intérêt de la migration vers Python}
+
+La réécriture du projet, initialement développé en C, s'est révélée bien plus
+qu'une traduction. Le passage à Python et NumPy a divisé la taille du code par
+plusieurs fois et l'a rendu directement confrontable à une référence
+(scikit-learn), ce que la version C ne permettait qu'imparfaitement. Surtout,
+l'effort économisé sur la gestion de la mémoire a pu être réinvesti dans le
+protocole expérimental : ajout d'un ensemble de validation dédié (dont
+l'apport est mesurable : environ douze points de F1 gagnés sur la régression
+logistique par le seul réglage du seuil), ajout d'une troisième méthode, et
+couverture par des tests automatisés. La compréhension fine des algorithmes
+n'a rien perdu au change, puisque chaque méthode reste implémentée from
+scratch, équations à l'appui.
+
+\subsection{Bilan personnel d'apprentissage}
+
+% Bilan rédigé à la première personne - à ajuster avec tes propres mots si tu
+% le souhaites.
+Ce projet m'a d'abord appris ce que « implémenter from scratch » exige
+réellement : écrire une sigmoïde, c'est facile ; écrire une sigmoïde qui ne
+déborde pas numériquement, une recherche de seuil de Gini qui tient en quelques
+opérations vectorisées, ou un $k$-NN qui ne sature pas la mémoire, c'est là que
+se loge la vraie compréhension des algorithmes. J'ai ensuite mesuré à quel
+point le protocole expérimental compte autant que les modèles : la distinction
+validation/test, que je percevais comme une convention, a produit sous mes yeux
+un gain de douze points de F1 et détecté un début de surapprentissage. Enfin,
+travailler sur des classes déséquilibrées m'a définitivement guéri de lire une
+accuracy au premier degré : c'est la matrice de confusion, lue avec les coûts
+métier en tête, qui dit ce qu'un classifieur vaut vraiment.

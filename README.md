@@ -1,427 +1,191 @@
-# Prédiction du Risque de Crédit Bancaire en C
+<!--
+======================================================================================
+Nom     : README.md
+Rôle    : Document de présentation, d'installation et d'exécution du projet.
+Auteur  : Maxime BRONNY
+Version : V1
+Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+          Master 1 Informatique Big Data
+Usage   : Document de présentation, d'installation et d'exécution du projet.
+======================================================================================
+-->
 
-**Projet académique M1 Informatique - Techniques d'Apprentissage Artificiel**
+# Prédiction du Risque de Crédit Bancaire
 
-Implémentation from scratch de deux algorithmes de machine learning en C pour la prédiction du risque de défaut de paiement bancaire. Ce projet démontre la mise en œuvre complète d'un pipeline d'apprentissage automatique, depuis le chargement des données jusqu'à l'évaluation des modèles, sans utilisation de bibliothèques d'apprentissage automatique.
+**Projet M1 Informatique — Techniques d'Apprentissage Artificiel**
+**Auteur : Maxime BRONNY — Université Paris 8**
 
-## Table des Matières
+Pipeline complet d'apprentissage automatique en **Python**, avec trois algorithmes de
+classification implémentés **from scratch** (numpy uniquement) : régression logistique,
+arbre de décision CART et k plus proches voisins. scikit-learn n'est utilisé que pour
+**vérifier** la justesse des implémentations.
 
-- [Description](#description)
-- [Architecture du Projet](#architecture-du-projet)
-- [Installation](#installation)
-- [Utilisation](#utilisation)
-- [Résultats et Performances](#résultats-et-performances)
-- [Structure des Fichiers Générés](#structure-des-fichiers-générés)
-- [Documentation](#documentation)
-- [Auteur](#auteur)
-
----
-
-## Description
-
-Ce projet académique propose une implémentation complète et autonome d'un système d'apprentissage automatique en langage C. L'objectif principal est de résoudre un problème de classification supervisée binaire pour la prédiction du risque de crédit bancaire.
-
-Le système classifie les emprunteurs en deux catégories :
-- **Classe 0** : Absence de défaut de paiement (bon risque)
-- **Classe 1** : Présence de défaut de paiement (mauvais risque)
-
-### Contributions Techniques
-
-Le projet se distingue par plusieurs contributions techniques et pédagogiques :
-
-- **Implémentation from scratch** : Deux modèles de classification supervisée (Régression Logistique et Arbre de Décision CART) développés sans bibliothèques d'apprentissage automatique
-- **Pipeline complet** : Système intégré de chargement, prétraitement, entraînement et évaluation des données
-- **Gestion des données catégorielles** : Encodage automatique de quatre variables catégorielles selon un schéma prédéfini
-- **Normalisation des données** : Implémentation du StandardScaler pour la standardisation des variables numériques
-- **Division des données** : Split train/test avec ratio 80/20 effectué uniquement par le programme C. Les fichiers `train.csv` et `test.csv` sont sauvegardés et réutilisés par les scripts Python pour garantir l'utilisation des mêmes données
-- **Métriques d'évaluation complètes** : Calcul de l'accuracy, précision, rappel, F1-score, AUC-ROC et génération de matrices de confusion
-- **Validation expérimentale** : Comparaison systématique avec scikit-learn pour valider la correction des implémentations
-- **Analyses avancées** : Analyse des seuils optimaux, analyse des poids des features, benchmark de performance, expérimentations d'hyperparamètres
-- **Tests unitaires** : Suite de 31 tests couvrant l'ensemble des modules du système
-
-### Technologies Utilisées
-
-- **Langage C** : Implémentation principale des algorithmes (GCC 12.5.0, standard C99)
-- **Python 3** : Scripts d'analyse et visualisation (pandas, numpy, matplotlib, seaborn, scikit-learn)
-- **Make** : Automatisation de la compilation et de l'exécution
-- **Docker** : Environnement reproductible (optionnel)
+> ℹ️ La première version de ce projet était implémentée en C. Ce code et tous les
+> fichiers associés (anciens rapports, résultats, Docker C) sont conservés à titre
+> d'historique en dehors du dossier de rendu (dans le dossier parent
+> `../archive_obsolete/`), mais ne sont plus utilisés : toute la partie
+> algorithmique est désormais en Python, conformément aux consignes de la matière.
 
 ---
 
-## Architecture du Projet
+## 1. Contexte et problématique
 
-Le projet suit une architecture modulaire qui sépare clairement les responsabilités de chaque composant, facilitant la maintenance, les tests et l'extension future.
+Lorsqu'une banque accorde un crédit, elle prend le risque que l'emprunteur ne rembourse
+pas. **Problématique** : à partir des caractéristiques d'un emprunteur et de son prêt
+(âge, revenu, montant, taux, historique...), peut-on prédire automatiquement le risque
+de défaut de paiement, et quelle méthode d'apprentissage supervisé offre le meilleur
+compromis entre détection des défauts et erreurs de classification ?
 
-### Structure des Répertoires
+Il s'agit d'une **classification binaire supervisée** :
+- classe 0 : remboursement normal (~78 % des cas) ;
+- classe 1 : défaut de paiement (~22 % des cas).
 
-```
-credit_risk_prediction/
-├── c/                               # C core (pipeline, modèles, métriques, tests)
-│   ├── src/                         # Code source C
-│   │   ├── main.c                   # Point d'entrée - Orchestre le pipeline complet
-│   │   ├── utils/                   # Utilitaires généraux
-│   │   ├── data/                    # Gestion des données (chargement, split)
-│   │   ├── preprocessing/           # Prétraitement (scaler, encoder)
-│   │   ├── models/                  # Algorithmes ML (régression logistique, arbre de décision)
-│   │   ├── evaluation/              # Métriques et évaluation
-│   │   └── analysis/                # Analyses avancées et expérimentations
-│   ├── tests/                       # Tests unitaires (31 tests)
-│   ├── build/                       # Fichiers de compilation (générés)
-│   └── Makefile
-├── python/                          # Scripts Python (validation sklearn, visualisation)
-│   ├── scripts/
-│   │   ├── explore_data.py
-│   │   ├── plot_results.py
-│   │   ├── compare_with_sklearn.py
-│   │   ├── analyze_missing_values.py
-│   │   ├── detect_outliers.py
-│   │   └── split_dataset.py
-│   └── requirements.txt
-├── data/                            # Source unique de vérité
-│   ├── raw/                         # Données brutes
-│   │   └── credit_risk_dataset.csv
-│   ├── processed/                   # Données prétraitées (générées par C)
-│   │   ├── train.csv
-│   │   ├── test.csv
-│   │   ├── scaler_params.txt
-│   │   └── split_info.txt
-│   └── stats/                       # Statistiques et analyses (générées)
-├── results/                         # Outputs générés (benchmarks, métriques, figures)
-│   ├── metrics/
-│   │   ├── logistic_regression/
-│   │   └── decision_tree/
-│   ├── plots/
-│   │   ├── csv/                     # Données CSV pour visualisation
-│   │   ├── logistic_regression/
-│   │   └── decision_tree/
-│   └── models/                      # Modèles sauvegardés (générés)
-│       ├── logistic_model.bin
-│       └── decision_tree_model.bin
-├── docs/
-├── Makefile                         # Délègue à c/Makefile
-├── Dockerfile
-└── README.md
-```
+Le déséquilibre des classes est un enjeu central du projet : un modèle naïf qui prédit
+toujours « pas de défaut » atteint déjà 78 % d'accuracy, d'où l'importance des métriques
+precision / recall / F1 / AUC.
 
-### Organisation Modulaire
+## 2. Dataset
 
-#### Module `utils/` - Utilitaires Généraux
-- **Rôle** : Fonctions utilitaires réutilisables dans tout le projet
-- **Composants** :
-  - `utils.c/.h` : Fonctions mathématiques, validation, helpers
-  - `csv_parser.c/.h` : Parsing CSV avec gestion des types (numérique/catégoriel) et chargement numérique pour datasets prétraités
-  - `memory_manager.c/.h` : Allocation mémoire sécurisée (détection d'erreurs)
+**Credit Risk Dataset** (Kaggle) — `data/raw/credit_risk_dataset.csv`
+- 32 581 emprunteurs, 11 variables explicatives + 1 cible (`loan_status`) ;
+- 8 variables numériques (âge, revenu, ancienneté d'emploi, montant, taux, etc.) ;
+- 4 variables catégorielles (type de logement, objet du prêt, grade A–G, antécédent de
+  défaut) ;
+- valeurs manquantes : `person_emp_length` (~2,7 %) et `loan_int_rate` (~9,6 %) ;
+- quelques valeurs aberrantes (âges > 120 ans) supprimées au nettoyage (7 lignes).
 
-#### Module `data/` - Gestion des Données
-- **Rôle** : Chargement et préparation des données
-- **Composants** :
-  - `data_loader.c/.h` : Chargement CSV → structure Dataset
-  - `data_splitter.c/.h` : Division train/test avec shuffle aléatoire. Génère et sauvegarde `train.csv` et `test.csv` dans `data/processed/`
-  - `prepare_dataset.c/.h` : Préparation séparée du dataset (split + sauvegarde train/test)
+## 3. Architecture du projet
 
-#### Module `preprocessing/` - Prétraitement
-- **Rôle** : Transformation des données pour l'entraînement
-- **Composants** :
-  - `preprocessing.c/.h` : Orchestration du pipeline de prétraitement
-  - `scaler.c/.h` : Normalisation StandardScaler (fit sur train, transform sur test)
-  - `encoder.c/.h` : Encodage catégoriel (Label Encoding)
-
-#### Module `models/` - Algorithmes ML
-- **Rôle** : Implémentation des algorithmes de machine learning
-- **Composants** :
-  - `logistic_regression.c/.h` : Régression logistique avec Gradient Descent
-  - `decision_tree.c/.h` : Arbre de décision CART (Gini/Entropy)
-
-#### Module `evaluation/` - Évaluation
-- **Rôle** : Calcul et sauvegarde des métriques de performance
-- **Composants** :
-  - `metrics.c/.h` : Calcul de toutes les métriques (Accuracy, Precision, Recall, F1, AUC-ROC)
-  - `confusion_matrix.c/.h` : Calcul et affichage de la matrice de confusion
-
-#### Module `analysis/` - Analyses Avancées
-- **Rôle** : Analyses approfondies et expérimentations sur les modèles
-- **Composants** :
-  - `threshold_analysis.c/.h` : Analyse des seuils optimaux de classification avec calcul des coûts métier
-  - `feature_weights_analysis.c/.h` : Analyse des poids et importance des features pour la régression logistique
-  - `learning_rate_experiment.c/.h` : Expérimentation systématique de différentes valeurs de learning rate
-  - `iterations_experiment.c/.h` : Expérimentation du nombre d'itérations pour l'entraînement
-
-### Flux de Données
-
-Le pipeline suit un flux séquentiel bien défini :
-
-```
-1. Chargement (data_loader)
-   └─> CSV brut → Dataset structuré
-
-2. Prétraitement (preprocessing)
-   ├─> Encodage catégoriel (encoder)
-   ├─> Gestion valeurs manquantes (preprocessing)
-   └─> Normalisation (scaler)
-
-3. Division (data_splitter)
-   └─> Dataset → Train (80%) + Test (20%)
-       └─> Sauvegarde train.csv et test.csv dans data/processed/
-           (Ces fichiers sont ensuite chargés par les scripts Python)
-
-4. Entraînement (models)
-   ├─> Régression Logistique (logistic_regression)
-   └─> Arbre de Décision (decision_tree)
-
-5. Évaluation (evaluation)
-   ├─> Calcul métriques (metrics)
-   ├─> Matrice de confusion (confusion_matrix)
-   └─> Sauvegarde résultats → results/metrics/
-
-6. Analyses avancées (analysis)
-   ├─> Analyse des seuils (threshold_analysis)
-   ├─> Analyse des poids (feature_weights_analysis)
-   └─> Benchmark de performance
-
-7. Visualisation (scripts Python)
-   └─> Génération graphiques → results/plots/
+```text
+PROGRAMME/
+├── main.py                 # Point d'entrée : python3 main.py
+├── requirements.txt        # Dépendances Python
+├── Makefile                # make run / make test / make clean
+├── Dockerfile              # Image reproductible (docker build / docker run)
+├── src/                    # Code source du pipeline
+│   ├── data_loader.py      # Chargement + validation du CSV
+│   ├── preprocessing.py    # Nettoyage, encodage, imputation, normalisation
+│   ├── split_data.py       # Split stratifié train/val/test (70/15/15)
+│   ├── metrics.py          # Métriques from scratch (accuracy → AUC-ROC)
+│   ├── visualization.py    # Figures du rapport
+│   └── models/             # Les 3 algorithmes from scratch
+├── tests/                  # Tests pytest (11 tests)
+├── data/
+│   ├── raw/                # Dataset brut (inchangé)
+│   ├── splits/             # train.csv / val.csv / test.csv (générés)
+│   └── stats/              # Analyse exploratoire (figures, stats)
+├── results/
+│   ├── metrics.json        # Toutes les métriques (3 modèles × train/test)
+│   ├── predictions.csv     # Prédictions et probabilités sur le test
+│   ├── sklearn_comparison.json  # Vérification from scratch vs sklearn
+│   └── models/*.pkl        # Modèles entraînés
+├── reports/
+│   ├── figures/            # 7 figures générées pour le rapport
+│   └── latex/              # Rapport LaTeX (main.tex, sections/, bibliographie)
+└── docs/
+    └── rapport/            # Rapport final au format PDF
 ```
 
----
+> L'ancienne version C et les sauvegardes intermédiaires sont conservées en dehors
+> de ce dossier (dans le dossier parent `PROJET/`) afin de ne garder ici que les
+> fichiers utiles au rendu final.
 
-## Installation
+📄 **Rapport** : le rapport final au format PDF se trouve dans `docs/rapport/` ;
+ses sources LaTeX (compilables) sont dans `reports/latex/`.
 
-### Prérequis
+## 4. Algorithmes implémentés (from scratch)
 
-- **Compilateur C** : GCC (version 7.5 ou supérieure)
-- **Make** : Pour la compilation automatisée
-- **Python 3** : Pour les scripts d'analyse (optionnel)
-  - Bibliothèques requises : pandas, numpy, matplotlib, seaborn, scikit-learn
+| Algorithme | Fichier | Principe | Hyperparamètres |
+|---|---|---|---|
+| Régression logistique | `src/models/logistic_regression.py` | sigmoïde(w·x+b), descente de gradient sur la log-loss | lr=0.1, 1000 itérations, seuil choisi sur validation |
+| Arbre de décision CART | `src/models/decision_tree.py` | partitionnement récursif minimisant l'impureté de Gini (recherche de seuils vectorisée) | profondeur choisie sur validation parmi {3,5,7,9} |
+| k-NN | `src/models/knn.py` | vote des k plus proches voisins (distance euclidienne, calcul par chunks) | k choisi sur validation parmi {5,11,21,31} |
 
-### Installation des Dépendances Python
+Trois familles complémentaires : un modèle **linéaire** interprétable, un modèle
+**non linéaire** à base de règles, et une méthode **non paramétrique** à base
+d'instances.
+
+## 5. Découpage des données
+
+**70 % entraînement / 15 % validation / 15 % test**, split **stratifié** (le taux de
+défaut de 21,8 % est préservé dans chaque ensemble), graine fixe (42) pour la
+reproductibilité.
+
+- l'**entraînement** sert à apprendre les paramètres des modèles ;
+- la **validation** sert uniquement à choisir les hyperparamètres (profondeur de
+  l'arbre, k du k-NN, seuils de décision) — critère : F1-score ;
+- le **test** n'est utilisé qu'une seule fois, à la fin, pour mesurer la performance de
+  généralisation réelle.
+
+Ce découpage en trois ensembles évite le biais classique qui consiste à régler les
+hyperparamètres sur le test (ce qui surestimerait les performances).
+
+## 6. Métriques
+
+Accuracy, précision, rappel, F1-score, matrice de confusion, courbe ROC et AUC —
+toutes implémentées from scratch dans `src/metrics.py` et sauvegardées dans
+`results/metrics.json`. Dans le contexte bancaire, le **faux négatif** (défaut non
+détecté → crédit accordé à tort) est l'erreur la plus coûteuse, d'où l'attention portée
+au rappel et au F1 plutôt qu'à la seule accuracy.
+
+## 7. Installation
 
 ```bash
-pip install -r python/requirements.txt
+# Python 3.9+ requis
+pip install -r requirements.txt
 ```
 
-### Compilation
+(Sur Ubuntu récent, si pip refuse : `pip install --user --break-system-packages -r requirements.txt`
+ou utilisez un environnement virtuel `python3 -m venv .venv && source .venv/bin/activate`.)
+
+## 8. Exécution
 
 ```bash
-# Compiler le projet
-make
-
-# Vérifier la compilation
-ls -l c/build/credit_risk_predictor
+python3 main.py                    # pipeline complet (~20 s)
+python3 main.py --compare-sklearn  # + vérification avec scikit-learn
+python3 -m pytest tests/ -v       # tests (11 tests)
+# ou : make run / make compare / make test
 ```
 
-**Flags de compilation** : `-Wall -Wextra -O2 -std=c99 -lm`
-
----
-
-## Utilisation
-
-### Exécution du Programme Principal
+**Avec Docker (optionnel — exécution reproductible sans installer les dépendances) :**
 
 ```bash
-# Exécuter le programme complet (depuis la racine du projet)
-./c/build/credit_risk_predictor
-
-# Ou utiliser make
-make run
+docker build -t credit-risk .   # construit l'image (lance aussi les 11 tests)
+docker run --rm credit-risk     # exécute le pipeline complet (python3 main.py)
 ```
 
-**Note importante** : Le programme C génère les fichiers `train.csv` et `test.csv` dans `data/processed/`. Ces fichiers sont ensuite utilisés par les scripts Python (notamment `compare_with_sklearn.py`). Il est donc recommandé d'exécuter le programme C en premier. Si les fichiers `train.csv` et `test.csv` n'existent pas, le script Python affichera un message d'erreur demandant d'exécuter le programme C d'abord.
+## 9. Résultats (ensemble de test, split 70/15/15, seed 42)
 
-### Commandes Makefile Principales
+| Modèle | Accuracy | Précision | Rappel | F1-score | AUC-ROC |
+|---|---|---|---|---|---|
+| Régression logistique | 0,820 | 0,573 | 0,690 | 0,626 | 0,848 |
+| **Arbre de décision (depth=7)** | **0,931** | **0,977** | **0,703** | **0,817** | **0,909** |
+| k-NN (k=31) | 0,862 | 0,683 | 0,684 | 0,683 | 0,877 |
 
-- `make` : Compile le projet
-- `make clean` : Nettoie les fichiers de compilation, résultats et modèles
-- `make run` : Compile et exécute le programme
-- `make results` : Génère les résultats C (métriques, CSV, modèles)
-- `make compare` : Génère la comparaison avec scikit-learn
-- `make plots` : Génère les graphiques Python
-- `make plots-all` : Génère tous les graphiques (C et Python)
-- `make verify` : Vérifie que tous les fichiers sont générés
-- `make regenerate` : Régénère tout (clean + compile + results + compare + plots-all + verify)
+L'arbre de décision domine sur toutes les métriques : le problème contient des
+interactions non linéaires (ex. ratio prêt/revenu × grade) qu'un modèle linéaire ne
+capture pas. Le k-NN se place entre les deux.
 
-### Pipeline d'Entraînement
+**Vérification scikit-learn** (mêmes données, mêmes hyperparamètres) : écart d'AUC
+≤ 0,0005 pour les trois modèles — les implémentations from scratch sont validées
+(`results/sklearn_comparison.json`).
 
-Le programme exécute automatiquement un workflow complet :
+## 10. Limites
 
-1. **Chargement des données** : Lecture du dataset depuis `data/raw/credit_risk_dataset.csv` ou chargement des datasets pré-traités depuis `data/processed/` si disponibles
-2. **Encodage catégoriel** : Transformation des variables catégorielles selon le schéma de label encoding défini
-3. **Gestion des valeurs manquantes** : Imputation par médiane pour les variables numériques
-4. **Division des données** : Split train/test avec ratio 80/20 effectué uniquement par le programme C. Les fichiers `train.csv` et `test.csv` sont sauvegardés dans `data/processed/`. Si ces fichiers existent déjà, ils sont chargés directement. Sinon, le split est effectué et les fichiers sont générés. Le script Python `compare_with_sklearn.py` charge directement ces fichiers pour garantir l'utilisation des mêmes données et permettre une comparaison équitable avec scikit-learn
-5. **Normalisation** : Application du StandardScaler (ajustement sur l'ensemble d'entraînement, transformation sur l'ensemble de test)
-6. **Entraînement de la régression logistique** : Optimisation par descente de gradient (1000 itérations, taux d'apprentissage 0.01)
-7. **Évaluation de la régression logistique** : Calcul des métriques sur les ensembles d'entraînement et de test
-8. **Analyses avancées** : Génération automatique de l'analyse des seuils optimaux, de l'analyse des poids des features, du tableau de convergence et du benchmark de performance
-9. **Entraînement de l'arbre de décision** : Construction de l'arbre avec max_depth=7 et critère d'impureté Gini
-10. **Évaluation de l'arbre de décision** : Calcul des métriques sur les ensembles d'entraînement et de test
-11. **Comparaison des modèles** : Analyse comparative des performances avec affichage des métriques principales
-12. **Persistance** : Sauvegarde des modèles entraînés et des résultats d'évaluation
-13. **Génération des graphiques** : Appel automatique de `plot_results.py` pour générer tous les graphiques
+- L'encodage label des variables nominales introduit un ordre artificiel (acceptable
+  pour l'arbre et le k-NN, plus discutable pour la régression logistique) ;
+- le déséquilibre des classes est géré par le réglage du seuil, pas par
+  ré-échantillonnage (SMOTE, pondération) ;
+- pas de validation croisée (un seul split, même si la graine est fixe) ;
+- la recherche d'hyperparamètres reste volontairement réduite (petites grilles).
 
----
+## 11. Pistes d'amélioration
 
-## Résultats et Performances
-
-### Performances Obtenues
-
-**Régression Logistique (Implémentation C)** :
-- Accuracy : 79.96%
-- AUC-ROC : 79.95%
-- Precision : 48.27%
-- Recall : 47.43%
-- F1-Score : 47.84%
-
-**Arbre de Décision (Implémentation C)** :
-- Accuracy : 93.52%
-- AUC-ROC : 91.94%
-- Precision : 97.30%
-- Recall : 68.49%
-- F1-Score : 80.39%
-
-### Comparaison avec Scikit-learn
-
-Les implémentations C sont comparées systématiquement avec scikit-learn pour validation :
-
-**Régression Logistique** :
-- L'écart observé (Accuracy -4.96%, AUC-ROC -5.26%) est principalement dû à la différence d'algorithme d'optimisation (Gradient Descent vs L-BFGS)
-- Le Recall est très proche (47.43% vs 48.17%), confirmant que les deux implémentations utilisent exactement les mêmes données train/test (générées par C)
-
-**Arbre de Décision** :
-- Résultats très similaires (différence < 5%) confirmant la correction de l'implémentation
-
-### Benchmark de Performance Computationnelle
-
-Temps d'exécution mesurés pour la régression logistique :
-
-| Opération | Temps (secondes) | Pourcentage du total |
-|-----------|-----------------|---------------------|
-| Chargement CSV + encodage | ~0.100 | 23.1% |
-| Prétraitement (imputation + shuffle) | ~0.030 | 6.9% |
-| Normalisation (fit + transform) | ~0.003 | 0.7% |
-| Entraînement (1000 itérations) | ~0.300 | 69.3% |
-| Évaluation (prédictions + métriques) | ~0.003 | 0.7% |
-| **TOTAL** | **~0.433** | **100%** |
-
-**Arbre de décision** : Temps d'entraînement environ 4.62 secondes
+- One-hot encoding des variables nominales et régularisation L2 pour la régression ;
+- random forest (bagging d'arbres) pour réduire la variance de l'arbre seul ;
+- validation croisée k-fold pour des estimations plus robustes ;
+- analyse coût-bénéfice métier (coût asymétrique FN/FP) pour le choix final du seuil.
 
 ---
 
-## Structure des Fichiers Générés
-
-### Répertoire `results/metrics/logistic_regression/`
-
-**Métriques C** :
-- `lr_c_train_metrics.txt` : Métriques d'entraînement (Accuracy, Precision, Recall, F1-Score)
-- `lr_c_test_metrics.txt` : Métriques de test (Accuracy, Precision, Recall, F1-Score, AUC-ROC)
-- `lr_c_test_confusion_matrix.txt` : Matrice de confusion (TN, FP, FN, TP)
-
-**Analyses avancées C** :
-- `lr_c_convergence_table.txt` : Tableau de convergence avec variations de coût par itération
-- `lr_c_threshold_analysis.txt` : Analyse des seuils optimaux (0.3, 0.4, 0.5, 0.6, 0.7) avec calcul des coûts métier
-- `lr_c_feature_weights_analysis.txt` : Analyse des poids et importance des features (classement par valeur absolue)
-- `lr_c_performance_benchmark.txt` : Benchmark de performance computationnelle détaillé par étape
-
-**Métriques Python (scikit-learn)** :
-- `lr_python_train_metrics.txt` : Métriques d'entraînement Python
-- `lr_python_test_metrics.txt` : Métriques de test Python
-- `lr_python_test_confusion_matrix.txt` : Matrice de confusion Python
-
-**Comparaison** :
-- `lr_comparison_c_vs_python.txt` : Tableau comparatif détaillé des métriques C vs Python
-
-### Répertoire `results/metrics/decision_tree/`
-
-**Métriques C** :
-- `dt_c_train_metrics.txt` : Métriques d'entraînement
-- `dt_c_test_metrics.txt` : Métriques de test
-- `dt_c_test_confusion_matrix.txt` : Matrice de confusion
-- `dt_c_tree_stats.txt` : Statistiques de l'arbre (profondeur réelle, nombre de nœuds, temps d'entraînement)
-
-**Métriques Python (scikit-learn)** :
-- `dt_python_train_metrics.txt` : Métriques d'entraînement Python
-- `dt_python_test_metrics.txt` : Métriques de test Python
-- `dt_python_test_confusion_matrix.txt` : Matrice de confusion Python
-- `dt_python_tree_stats.txt` : Statistiques de l'arbre Python
-
-**Comparaison** :
-- `dt_comparison_c_vs_python.txt` : Tableau comparatif détaillé des métriques C vs Python
-
-### Répertoire `results/plots/`
-
-**Graphiques Régression Logistique** :
-- `lr_c_confusion_matrix_test.png` : Matrice de confusion visuelle (C)
-- `lr_c_metrics_train_vs_test.png` : Comparaison métriques train vs test (C)
-- `lr_c_cost_curve_training.png` : Courbe de coût pendant l'entraînement (C)
-- `lr_python_confusion_matrix_test.png` : Matrice de confusion visuelle (Python)
-- `lr_python_metrics_train_vs_test.png` : Comparaison métriques train vs test (Python)
-- `lr_python_cost_curve_training.png` : Courbe de coût pendant l'entraînement (Python)
-- `lr_dt_c_roc_curves_comparison.png` : Comparaison des courbes ROC LR vs DT (C)
-- `lr_dt_python_roc_curves_comparison.png` : Comparaison des courbes ROC LR vs DT (Python)
-- `summary_lr_c.png` : Figure récapitulative complète (C)
-- `summary_lr_python.png` : Figure récapitulative complète (Python)
-
-**Graphiques Arbre de Décision** :
-- `dt_c_confusion_matrix_test.png` : Matrice de confusion visuelle (C)
-- `dt_c_metrics_train_vs_test.png` : Comparaison métriques train vs test (C)
-- `dt_c_feature_importance.png` : Importance des features (C)
-- `dt_python_confusion_matrix_test.png` : Matrice de confusion visuelle (Python)
-- `dt_python_metrics_train_vs_test.png` : Comparaison métriques train vs test (Python)
-- `summary_dt_c.png` : Figure récapitulative complète (C)
-- `summary_dt_python.png` : Figure récapitulative complète (Python)
-
-**Figure globale** :
-- `summary_figure.png` : Vue d'ensemble générale comparant tous les modèles
-
-**Données pour visualisation** (`results/plots/csv/`) :
-- `lr_c_cost_curve.csv` : Données de la courbe de coût (C)
-- `lr_python_cost_curve.csv` : Données de la courbe de coût (Python)
-- `lr_roc_data.csv` : Données pour courbe ROC (C)
-- `lr_python_roc_data.csv` : Données pour courbe ROC (Python)
-- `dt_roc_data.csv` : Données pour courbe ROC arbre de décision (C)
-- `dt_python_roc_data.csv` : Données pour courbe ROC arbre de décision (Python)
-
-**Total** : 17 graphiques PNG générés automatiquement
-
----
-
-## Documentation
-
-### Documentation API
-
-Pour comprendre en détail l'utilisation de chaque fonction :
-- `docs/api/functions_documentation.md` : Documentation complète de toutes les fonctions avec paramètres, valeurs de retour et exemples
-
-### Documentation du Code Source
-
-Tous les fichiers source du projet incluent une documentation complète et standardisée :
-- **En-têtes professionnels** : Chaque fichier commence par un en-tête avec nom, rôle, auteur, version et instructions d'usage
-- **Documentation des fonctions** : Toutes les fonctions sont documentées selon un format standardisé avec rôle, paramètres et valeur de retour
-- **Encadrés visuels** : Les sections importantes du code sont marquées par des encadrés visuels clairs pour faciliter la navigation
-
-### Rapports Techniques
-
-Le projet inclut une documentation académique complète :
-- **Rapport principal** : `docs/rapport/M1 - TAA - Maxime BRONNY - 19009314.pdf`
-- **Présentation** : `docs/presentation/slides.pdf`
-
----
-
-## Auteur
-
-**Projet M1** - Techniques d'Apprentissage Artificiel  
-**Auteur** : Maxime BRONNY  
-**Année Académique** : 2025-2026
-
----
-
-## Références
-
-- Kaggle Credit Risk Dataset
-- Breiman, L. (1984). Classification and Regression Trees (CART)
-- Hosmer, D. W., & Lemeshow, S. (2000). Applied Logistic Regression
-- Andrew Ng - Machine Learning Course (Coursera)
-- Bishop, C. (2006). Pattern Recognition and Machine Learning
-- Scikit-learn Documentation
-
----
-
-**Dernière mise à jour** : Décembre 2025
+**Année académique 2025-2026 — dernière mise à jour : juin 2026**

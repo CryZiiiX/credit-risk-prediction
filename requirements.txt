@@ -1,0 +1,30 @@
+# ======================================================================================
+# Nom     : requirements.txt
+# Rôle    : Liste les dépendances Python nécessaires à l'exécution du projet.
+# Auteur  : Maxime BRONNY
+# Version : V1
+# Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+#           Master 1 Informatique Big Data
+# Usage   : Installer avec pip install -r requirements.txt.
+# ======================================================================================
+
+# Dépendances du pipeline Python — Prédiction du Risque de Crédit (M1 TAA)
+#
+# Installation : pip install -r requirements.txt
+# Python 3.9+ recommandé.
+
+# Calcul numérique : base de toutes les implémentations from scratch
+numpy>=1.23.0
+
+# Chargement et manipulation du dataset CSV
+pandas>=1.5.0
+
+# Génération des figures du rapport (reports/figures/)
+matplotlib>=3.6.0
+
+# UNIQUEMENT pour la vérification des implémentations from scratch
+# (option --compare-sklearn) — jamais utilisé comme solution principale
+scikit-learn>=1.2.0
+
+# Exécution des tests (tests/)
+pytest>=7.0.0

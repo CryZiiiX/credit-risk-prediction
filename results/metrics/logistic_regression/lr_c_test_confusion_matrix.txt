@@ -1,3 +1,0 @@
-Confusion Matrix:
-TN: 4565, FP: 692
-FN: 604, TP: 656

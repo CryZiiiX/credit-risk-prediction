@@ -1,0 +1,139 @@
+% ======================================================================================
+% Nom     : reports/latex/sections/06_algorithmes.tex
+% Rôle    : Section présentant les algorithmes implémentés.
+% Auteur  : Maxime BRONNY
+% Version : V1
+% Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+%           Master 1 Informatique Big Data
+% Usage   : Fichier inclus dans main.tex lors de la compilation du rapport.
+% ======================================================================================
+
+\section{Algorithmes implémentés}
+\label{sec:algorithmes}
+
+Les trois algorithmes sont implémentés from scratch en Python, avec NumPy pour
+le calcul vectoriel, dans le module \texttt{src/models/}. Nous présentons pour
+chacun le principe, les équations, les choix d'implémentation et les limites.
+
+\subsection{Régression logistique}
+\label{subsec:lr}
+
+\paragraph{Principe.}
+La régression logistique \cite{hosmer2000logistic} modélise directement la
+probabilité de défaut comme une fonction du score linéaire
+$z = \mathbf{w} \cdot \mathbf{x} + b$ passée dans la sigmoïde :
+\[
+  p(y = 1 \mid \mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}} .
+\]
+Les paramètres $\mathbf{w}$ et $b$ sont appris en minimisant l'entropie croisée
+(\emph{log-loss}) sur l'ensemble d'entraînement :
+\[
+  J(\mathbf{w}, b) = -\frac{1}{n} \sum_{i=1}^{n}
+    \left[ y_i \ln p_i + (1 - y_i) \ln (1 - p_i) \right],
+\]
+fonction convexe dont le minimum global est atteignable par descente de
+gradient. Les gradients ont une forme remarquablement simple :
+\[
+  \frac{\partial J}{\partial \mathbf{w}} = \frac{1}{n} X^{\top}(\mathbf{p} - \mathbf{y}),
+  \qquad
+  \frac{\partial J}{\partial b} = \frac{1}{n} \sum_{i=1}^{n} (p_i - y_i).
+\]
+
+\paragraph{Implémentation.}
+Notre implémentation (\texttt{src/models/logistic\_regression.py}) utilise une
+descente de gradient \emph{full batch} : à chaque itération, le gradient est
+calculé sur tout l'ensemble d'entraînement en une seule opération matricielle.
+Deux détails numériques méritent mention : la sigmoïde est calculée par deux
+formules équivalentes selon le signe de $z$ afin d'éviter tout dépassement de
+capacité de l'exponentielle, et les probabilités sont bornées avant le
+logarithme pour éviter $\ln 0$. Les hyperparamètres d'optimisation sont un taux
+d'apprentissage de $0{,}1$ et $1\,000$ itérations, sur données normalisées. La
+figure~\ref{fig:lr-cost} montre la décroissance régulière de la log-loss : la
+descente de gradient converge sans oscillation, signe d'un taux d'apprentissage
+bien dimensionné.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.68\textwidth]{lr_cost_curve.png}
+  \caption{Convergence de la descente de gradient : décroissance de la
+    log-loss sur l'ensemble d'entraînement ($1\,000$ itérations, taux
+    d'apprentissage $0{,}1$).}
+  \label{fig:lr-cost}
+\end{figure}
+
+Le seuil qui convertit la probabilité en classe est traité comme un
+hyperparamètre choisi sur la validation ; la valeur retenue, $0{,}3$, est
+inférieure au seuil naïf de $0{,}5$ : en présence de classes déséquilibrées,
+abaisser le seuil augmente le rappel, ce qui est cohérent avec le coût élevé
+des faux négatifs.
+
+\paragraph{Limites.}
+La frontière de décision reste un hyperplan : les interactions entre variables
+(un même taux d'endettement n'a pas le même sens selon le grade du dossier) ne
+sont pas modélisées. Le modèle est de plus pénalisé par l'encodage ordinal des
+variables nominales, qui lui impose un ordre arbitraire.
+
+\subsection{Arbre de décision CART}
+\label{subsec:dt}
+
+\paragraph{Principe.}
+L'algorithme CART \cite{breiman1984cart} construit un arbre binaire par
+partitionnement récursif. À chaque n\oe ud, il cherche le couple (variable,
+seuil) qui sépare le mieux les exemples, au sens de l'impureté de Gini : pour
+un groupe contenant une proportion $p$ de défauts, $G = 2p(1-p)$, nulle pour un
+groupe pur et maximale pour un mélange $50/50$. Le couple retenu minimise la
+moyenne pondérée des impuretés des deux groupes enfants. La construction
+s'arrête quand le n\oe ud est pur, trop petit, ou que la profondeur maximale
+est atteinte ; chaque feuille prédit alors la proportion de défauts des
+exemples qu'elle contient, interprétable comme une probabilité.
+
+\paragraph{Implémentation.}
+La difficulté pratique est le coût de la recherche du meilleur seuil. Notre
+implémentation (\texttt{src/models/decision\_tree.py}) la vectorise : pour
+chaque variable, les valeurs sont triées et les sommes cumulées des étiquettes
+donnent, pour \emph{toutes} les positions de coupure possibles à la fois, la
+proportion de défauts de part et d'autre, et donc le Gini de tous les seuils
+candidats en une seule passe NumPy, sans boucle Python sur les seuils. Cette
+vectorisation rend l'entraînement quasi instantané sur 22\,802 exemples. Deux
+garde-fous limitent le surapprentissage : un n\oe ud n'est divisé que s'il
+contient au moins 20 exemples, et toute feuille doit en contenir au moins 5.
+La profondeur maximale, hyperparamètre principal, est choisie sur la
+validation ; l'arbre retenu a une profondeur de $7$ et compte $105$ n\oe uds.
+
+\paragraph{Limites.}
+Un arbre seul est un modèle instable : une perturbation des données
+d'entraînement peut changer les premières divisions et, par effet de cascade,
+toute la structure. Sans limite de profondeur, il mémoriserait le bruit du
+train ; le contrôle par la validation est donc indispensable. Enfin, sa
+frontière de décision « en escalier » approxime grossièrement les relations
+continues douces.
+
+\subsection{$k$ plus proches voisins ($k$-NN)}
+\label{subsec:knn}
+
+\paragraph{Principe.}
+Le $k$-NN \cite{cover1967knn} ne construit aucun modèle : l'« apprentissage »
+consiste à mémoriser l'ensemble d'entraînement. Pour classer un nouvel exemple,
+on calcule sa distance euclidienne à tous les exemples mémorisés, on retient
+les $k$ plus proches et l'on prédit la proportion de défauts parmi eux. Le
+paramètre $k$ règle le compromis biais-variance : petit, la décision est locale
+mais bruitée ; grand, elle est lissée mais peut noyer les structures locales.
+
+\paragraph{Implémentation.}
+La difficulté est ici la mémoire : la matrice complète des distances entre les
+4\,886 exemples de test et les 22\,802 exemples d'entraînement occuperait de
+l'ordre de 900~Mo. Notre implémentation (\texttt{src/models/knn.py}) procède
+donc par paquets de quelques centaines d'exemples. Deux optimisations
+classiques sont utilisées : le développement
+$\lVert a - b \rVert^2 = \lVert a \rVert^2 + \lVert b \rVert^2 - 2\,a \cdot b$,
+dont le terme $\lVert a \rVert^2$, constant pour un exemple donné, peut être
+omis car il ne change pas l'ordre des voisins ; et la sélection des $k$ plus
+petites distances par \texttt{np.argpartition}, en temps linéaire, au lieu d'un
+tri complet. La valeur retenue sur la validation est $k = 31$.
+
+\paragraph{Limites.}
+Toute la charge de calcul est reportée à la prédiction, qui parcourt
+l'ensemble d'entraînement complet pour chaque exemple, ce qui est rédhibitoire
+pour un système temps réel à fort trafic sans structures d'index dédiées. La méthode
+est par ailleurs très sensible à l'échelle des variables (d'où la
+normalisation) et sa pertinence se dégrade en haute dimension.

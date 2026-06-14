@@ -1,0 +1,50 @@
+{
+  "logistic_regression": {
+    "sklearn": {
+      "accuracy": 0.8467048710601719,
+      "precision": 0.741248097412481,
+      "recall": 0.45684803001876173,
+      "f1_score": 0.5652930934416714,
+      "confusion_matrix": {
+        "TP": 487,
+        "TN": 3650,
+        "FP": 170,
+        "FN": 579
+      },
+      "auc_roc": 0.848335019596672
+    },
+    "ecart_auc": -0.0005
+  },
+  "decision_tree": {
+    "sklearn": {
+      "accuracy": 0.9322554236594351,
+      "precision": 0.9741935483870968,
+      "recall": 0.7082551594746717,
+      "f1_score": 0.8202064095600218,
+      "confusion_matrix": {
+        "TP": 755,
+        "TN": 3800,
+        "FP": 20,
+        "FN": 311
+      },
+      "auc_roc": 0.9086260964804574
+    },
+    "ecart_auc": 0.0
+  },
+  "knn": {
+    "sklearn": {
+      "accuracy": 0.8790421612771183,
+      "precision": 0.8728414442700158,
+      "recall": 0.5215759849906192,
+      "f1_score": 0.6529653552554316,
+      "confusion_matrix": {
+        "TP": 556,
+        "TN": 3739,
+        "FP": 81,
+        "FN": 510
+      },
+      "auc_roc": 0.8771851026001197
+    },
+    "ecart_auc": 0.0
+  }
+}

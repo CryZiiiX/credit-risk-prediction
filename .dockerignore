@@ -6,7 +6,10 @@
 # accélère le build en évitant de copier des fichiers inutiles.
 # ============================================================================
 
-# Fichiers de build et compilation (recompilés dans le container)
+# Archive historique (ancienne version C, anciens rapports/résultats)
+archive_obsolete/
+
+# Fichiers de build et compilation
 build/
 c/build/
 *.o

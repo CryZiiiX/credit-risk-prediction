@@ -14,10 +14,13 @@
 __pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
 
-# IDE
+# IDE / éditeurs / assistants
 .vscode/
 .idea/
+.cursor/
+.claude/
 *.swp
 *.swo
 

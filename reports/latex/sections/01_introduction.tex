@@ -1,0 +1,54 @@
+% ======================================================================================
+% Nom     : reports/latex/sections/01_introduction.tex
+% Rôle    : Section d'introduction du rapport.
+% Auteur  : Maxime BRONNY
+% Version : V1
+% Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+%           Master 1 Informatique Big Data
+% Usage   : Fichier inclus dans main.tex lors de la compilation du rapport.
+% ======================================================================================
+
+\section{Introduction}
+\label{sec:introduction}
+
+L'évaluation du risque de crédit est l'une des activités les plus sensibles du
+secteur bancaire : chaque prêt accordé repose sur un pari, celui que l'emprunteur
+remboursera. Historiquement confiée à des analystes humains s'appuyant sur des
+grilles de notation, cette évaluation est aujourd'hui largement automatisée grâce
+à l'apprentissage automatique, qui permet d'exploiter les données historiques de
+remboursement pour estimer la probabilité de défaut d'un nouveau client. Le
+\emph{credit scoring} constitue ainsi l'un des cas d'usage les plus anciens et les
+mieux documentés de la classification supervisée \cite{hosmer2000logistic}.
+
+Ce projet, réalisé dans le cadre du cours de Techniques d'Apprentissage
+Artificiel, a pour objectif de construire un pipeline complet d'apprentissage
+automatique appliqué à la prédiction du risque de crédit, puis de comparer
+rigoureusement trois méthodes de classification de familles différentes : la
+régression logistique, l'arbre de décision CART et les $k$ plus proches voisins
+($k$-NN). Un parti pris fort structure l'ensemble du travail : les trois
+algorithmes, ainsi que toutes les métriques d'évaluation, sont implémentés
+\emph{from scratch} en Python~\cite{python_psf}, à l'aide de la seule
+bibliothèque de calcul numérique NumPy \cite{harris2020numpy}. La bibliothèque scikit-learn
+\cite{pedregosa2011sklearn} n'intervient qu'en fin de chaîne, uniquement comme
+référence permettant de \emph{vérifier} la justesse de nos implémentations. Elle
+n'est jamais utilisée comme solution.
+
+Précisons un point d'historique : la première version de ce projet avait été
+développée en langage C, avec un découpage train/test simple et deux modèles.
+Le projet a été entièrement réécrit en Python pour répondre aux consignes de la
+matière ; cette réécriture a été l'occasion d'enrichir le protocole expérimental
+(ajout d'un ensemble de validation dédié au choix des hyperparamètres, ajout
+d'une troisième méthode) et de valider systématiquement les implémentations par
+comparaison avec scikit-learn. L'ancienne version est conservée à titre d'archive
+mais n'intervient plus dans le présent travail.
+
+Ce rapport est organisé comme suit. La section~\ref{sec:contexte} présente le
+contexte métier et la problématique. La section~\ref{sec:donnees} décrit le jeu
+de données utilisé et la section~\ref{sec:pretraitement} les étapes de
+prétraitement, dont le découpage entraînement/validation/test. La
+section~\ref{sec:methodologie} détaille le protocole expérimental et les
+métriques retenues, puis la section~\ref{sec:algorithmes} expose le principe et
+l'implémentation de chacun des trois algorithmes. Les résultats sont présentés
+en section~\ref{sec:resultats}, analysés de manière critique en
+section~\ref{sec:analyse}, et la section~\ref{sec:limites} discute les limites
+du travail et les améliorations envisageables, avant la conclusion.

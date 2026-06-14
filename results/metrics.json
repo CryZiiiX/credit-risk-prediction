@@ -1,0 +1,115 @@
+{
+  "dataset": {
+    "n_total": 32574,
+    "n_train": 22802,
+    "n_val": 4886,
+    "n_test": 4886,
+    "split": "70/15/15 stratifié",
+    "seed": 42
+  },
+  "models": {
+    "logistic_regression": {
+      "hyperparameters": {
+        "learning_rate": 0.1,
+        "n_iterations": 1000,
+        "threshold": 0.3
+      },
+      "validation_f1": 0.6248941574936494,
+      "train": {
+        "accuracy": 0.8176914305762653,
+        "precision": 0.5676704169424223,
+        "recall": 0.6896482412060302,
+        "f1_score": 0.6227425356202924,
+        "confusion_matrix": {
+          "TP": 3431,
+          "TN": 15214,
+          "FP": 2613,
+          "FN": 1544
+        },
+        "auc_roc": 0.8484535314706703
+      },
+      "test": {
+        "accuracy": 0.8200982398690135,
+        "precision": 0.5727626459143969,
+        "recall": 0.6904315196998124,
+        "f1_score": 0.6261165461505742,
+        "confusion_matrix": {
+          "TP": 736,
+          "TN": 3271,
+          "FP": 549,
+          "FN": 330
+        },
+        "auc_roc": 0.847869905601996
+      }
+    },
+    "decision_tree": {
+      "hyperparameters": {
+        "max_depth": 7,
+        "min_samples_split": 20,
+        "min_samples_leaf": 5,
+        "threshold": 0.6,
+        "n_nodes": 105
+      },
+      "validation_f1": 0.8193163320672816,
+      "train": {
+        "accuracy": 0.9303131304271555,
+        "precision": 0.9747616376892877,
+        "recall": 0.6986934673366835,
+        "f1_score": 0.8139562112164853,
+        "confusion_matrix": {
+          "TP": 3476,
+          "TN": 17737,
+          "FP": 90,
+          "FN": 1499
+        },
+        "auc_roc": 0.9137744424145747
+      },
+      "test": {
+        "accuracy": 0.9314367580843226,
+        "precision": 0.9765319426336375,
+        "recall": 0.702626641651032,
+        "f1_score": 0.8172394980905618,
+        "confusion_matrix": {
+          "TP": 749,
+          "TN": 3802,
+          "FP": 18,
+          "FN": 317
+        },
+        "auc_roc": 0.9086260964804574
+      }
+    },
+    "knn": {
+      "hyperparameters": {
+        "k": 31,
+        "threshold": 0.3
+      },
+      "validation_f1": 0.694955209806695,
+      "train": {
+        "accuracy": 0.8699675467064293,
+        "precision": 0.7031123686337915,
+        "recall": 0.6992964824120603,
+        "f1_score": 0.7011992341025899,
+        "confusion_matrix": {
+          "TP": 3479,
+          "TN": 16358,
+          "FP": 1469,
+          "FN": 1496
+        },
+        "auc_roc": 0.9069936150714869
+      },
+      "test": {
+        "accuracy": 0.8616455178059763,
+        "precision": 0.6825842696629213,
+        "recall": 0.6838649155722326,
+        "f1_score": 0.683223992502343,
+        "confusion_matrix": {
+          "TP": 729,
+          "TN": 3481,
+          "FP": 339,
+          "FN": 337
+        },
+        "auc_roc": 0.8771851026001197
+      }
+    }
+  }
+}

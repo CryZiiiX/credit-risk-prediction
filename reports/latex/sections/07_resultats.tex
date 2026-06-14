@@ -1,0 +1,173 @@
+% ======================================================================================
+% Nom     : reports/latex/sections/07_resultats.tex
+% Rôle    : Section présentant les résultats expérimentaux.
+% Auteur  : Maxime BRONNY
+% Version : V1
+% Cadre   : Réalisé dans le cadre du cours Techniques d'apprentissage artificiel
+%           Master 1 Informatique Big Data
+% Usage   : Fichier inclus dans main.tex lors de la compilation du rapport.
+% ======================================================================================
+
+\section{Résultats}
+\label{sec:resultats}
+
+% Toutes les valeurs de cette section proviennent de l'exécution réelle du
+% pipeline (python3 main.py, 12/06/2026, split 70/15/15 stratifié, seed 42).
+% Source : results/metrics.json et results/sklearn_comparison.json.
+
+\subsection{Sélection des hyperparamètres sur la validation}
+
+Le tableau~\ref{tab:validation} retrace la sélection effectuée sur l'ensemble
+de validation (critère : F1-score). Pour l'arbre, le F1 progresse nettement de
+la profondeur 3 à la profondeur 7, puis recule légèrement à 9 : au-delà de 7,
+la complexité supplémentaire n'apporte plus de pouvoir prédictif généralisable.
+Pour le $k$-NN, le F1 est remarquablement stable sur la grille, signe que la
+décision dépend peu du voisinage exact au-delà d'une dizaine de voisins.
+
+\begin{table}[H]
+  \centering
+  \caption{Sélection des hyperparamètres sur l'ensemble de validation
+    (F1-score ; en gras, la configuration retenue).}
+  \label{tab:validation}
+  \begin{tabular}{llcc}
+    \toprule
+    \textbf{Modèle} & \textbf{Configuration} & \textbf{Seuil optimal} & \textbf{F1 (validation)} \\
+    \midrule
+    Régression logistique & lr $=0{,}1$, $1\,000$ it. & \textbf{0,3} & \textbf{0,625} \\
+    \midrule
+    \multirow{4}{*}{Arbre de décision}
+      & profondeur 3 & 0,3 & 0,728 \\
+      & profondeur 5 & 0,3 & 0,776 \\
+      & \textbf{profondeur 7} & \textbf{0,6} & \textbf{0,819} \\
+      & profondeur 9 & 0,6 & 0,817 \\
+    \midrule
+    \multirow{4}{*}{$k$-NN}
+      & $k = 5$  & 0,5 & 0,683 \\
+      & $k = 11$ & 0,4 & 0,695 \\
+      & $k = 21$ & 0,3 & 0,692 \\
+      & $\boldsymbol{k = 31}$ & \textbf{0,3} & \textbf{0,695} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Performances sur l'ensemble de test}
+
+Le tableau~\ref{tab:resultats-test} présente l'évaluation finale, réalisée une
+seule fois sur l'ensemble de test.
+
+\begin{table}[H]
+  \centering
+  \caption{Métriques des trois modèles sur l'ensemble de test
+    (4\,886 exemples). Hyperparamètres choisis sur la validation.}
+  \label{tab:resultats-test}
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Modèle} & \textbf{Accuracy} & \textbf{Précision} & \textbf{Rappel}
+      & \textbf{F1-score} & \textbf{AUC-ROC} \\
+    \midrule
+    Régression logistique (seuil 0,3)        & 0,820 & 0,573 & 0,690 & 0,626 & 0,848 \\
+    Arbre de décision (prof.\ 7, seuil 0,6)  & \textbf{0,931} & \textbf{0,977}
+      & \textbf{0,703} & \textbf{0,817} & \textbf{0,909} \\
+    $k$-NN ($k=31$, seuil 0,3)               & 0,862 & 0,683 & 0,684 & 0,683 & 0,877 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+La hiérarchie est nette et cohérente sur toutes les métriques : \textbf{l'arbre
+de décision domine}, suivi du $k$-NN, puis de la régression logistique. L'arbre
+atteint un F1 de $0{,}817$ et une AUC de $0{,}909$ ; son avance la plus
+spectaculaire concerne la précision ($0{,}977$) : lorsqu'il prédit un défaut,
+il se trompe très rarement. Les trois modèles plafonnent en revanche à un
+rappel compris entre $0{,}69$ et $0{,}70$ : quel que soit le modèle, environ
+$30\,\%$ des défauts échappent à la détection. Nous y revenons dans l'analyse
+critique.
+
+\subsection{Matrices de confusion}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.32\textwidth]{lr_confusion_matrix.png}\hfill
+  \includegraphics[width=0.32\textwidth]{dt_confusion_matrix.png}\hfill
+  \includegraphics[width=0.32\textwidth]{knn_confusion_matrix.png}
+  \caption{Matrices de confusion sur l'ensemble de test : régression
+    logistique (gauche), arbre de décision (centre), $k$-NN (droite).}
+  \label{fig:confusion-matrices}
+\end{figure}
+
+La lecture détaillée des matrices (figure~\ref{fig:confusion-matrices})
+éclaire les différences de comportement. Sur les 4\,886 dossiers de test
+(dont 1\,066 défauts) :
+
+\begin{itemize}
+  \item l'\textbf{arbre} ne commet que \textbf{18 faux positifs} (bons clients
+    refusés) pour 749 défauts détectés, soit un profil très « prudent dans
+    l'alerte » ; ses erreurs sont presque exclusivement des faux négatifs
+    (317) ;
+  \item la \textbf{régression logistique}, avec son seuil abaissé à $0{,}3$,
+    détecte un nombre comparable de défauts (736) mais au prix de 549 faux
+    positifs, soit trente fois plus que l'arbre ;
+  \item le \textbf{$k$-NN} occupe une position intermédiaire (729 défauts
+    détectés, 339 faux positifs).
+\end{itemize}
+
+Autrement dit, à rappel quasi égal, les trois modèles se distinguent presque
+uniquement par leur taux de fausses alertes. C'est ce qui explique l'écart
+de précision et donc de F1.
+
+\subsection{Courbes ROC et comparaison globale}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{roc_curves_comparison.png}
+  \caption{Courbes ROC des trois modèles sur l'ensemble de test.
+    AUC : arbre de décision $0{,}909$ ; $k$-NN $0{,}877$ ;
+    régression logistique $0{,}848$.}
+  \label{fig:roc}
+\end{figure}
+
+Les courbes ROC (figure~\ref{fig:roc}) confirment la hiérarchie
+indépendamment du seuil de décision : la courbe de l'arbre domine celle du
+$k$-NN, qui domine celle de la régression logistique, sur la quasi-totalité de
+la plage de fonctionnement. Les trois modèles sont très au-dessus de la
+diagonale du hasard (AUC $0{,}5$). La figure~\ref{fig:models-comparison}
+récapitule les cinq métriques. L'ensemble des figures de ce rapport est produit
+avec Matplotlib~\cite{hunter2007matplotlib}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{models_comparison.png}
+  \caption{Comparaison des cinq métriques sur l'ensemble de test.}
+  \label{fig:models-comparison}
+\end{figure}
+
+\subsection{Validation des implémentations avec scikit-learn}
+
+Pour vérifier la justesse de nos implémentations, chaque modèle a été
+ré-entraîné avec son équivalent scikit-learn sur exactement les mêmes ensembles
+et avec des hyperparamètres équivalents (tableau~\ref{tab:sklearn}).
+
+\begin{table}[H]
+  \centering
+  \caption{Vérification des implémentations from scratch : AUC sur l'ensemble
+    de test, comparée à scikit-learn.}
+  \label{tab:sklearn}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Modèle} & \textbf{AUC from scratch} & \textbf{AUC scikit-learn}
+      & \textbf{Écart} \\
+    \midrule
+    Régression logistique & 0,8479 & 0,8483 & $-0{,}0005$ \\
+    Arbre de décision     & 0,9086 & 0,9086 & $0{,}0000$ \\
+    $k$-NN                & 0,8772 & 0,8772 & $0{,}0000$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+L'arbre et le $k$-NN obtiennent une AUC \emph{identique} à celle de
+scikit-learn, et l'écart de la régression logistique ($5 \times 10^{-4}$)
+s'explique par les différences d'optimiseur (notre descente de gradient pure
+contre L-BFGS) et par la régularisation L2 activée par défaut dans
+scikit-learn. Ces écarts négligeables valident nos trois implémentations.
+L'ensemble du pipeline, comprenant le prétraitement, l'entraînement des trois
+modèles, la sélection sur validation, l'évaluation et la génération des figures,
+s'exécute en une vingtaine de secondes.
