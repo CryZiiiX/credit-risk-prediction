@@ -1,0 +1,7 @@
+# Statistiques de langage GitHub (Linguist)
+# ----------------------------------------------------------------------
+# Le rapport LaTeX (reports/latex/) est de la documentation, pas du code
+# du projet : on l'exclut du calcul des pourcentages de langage afin que
+# Python (le coeur du projet) soit correctement mis en avant sur GitHub.
+reports/latex/** linguist-documentation
+*.tex            linguist-documentation
