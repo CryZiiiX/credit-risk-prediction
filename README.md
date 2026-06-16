@@ -12,8 +12,8 @@ Usage   : Document de présentation, d'installation et d'exécution du projet.
 
 # Prédiction du Risque de Crédit Bancaire
 
-**Projet M1 Informatique — Techniques d'Apprentissage Artificiel**
-**Auteur : Maxime BRONNY — Université Paris 8**
+**Projet M1 Informatique - Techniques d'Apprentissage Artificiel**
+**Auteur : Maxime BRONNY - Université Paris 8**
 
 Pipeline complet d'apprentissage automatique en **Python**, avec trois algorithmes de
 classification implémentés **from scratch** (numpy uniquement) : régression logistique,
@@ -46,10 +46,10 @@ precision / recall / F1 / AUC.
 
 ## 2. Dataset
 
-**Credit Risk Dataset** (Kaggle) — `data/raw/credit_risk_dataset.csv`
+**Credit Risk Dataset** (Kaggle) - `data/raw/credit_risk_dataset.csv`
 - 32 581 emprunteurs, 11 variables explicatives + 1 cible (`loan_status`) ;
 - 8 variables numériques (âge, revenu, ancienneté d'emploi, montant, taux, etc.) ;
-- 4 variables catégorielles (type de logement, objet du prêt, grade A–G, antécédent de
+- 4 variables catégorielles (type de logement, objet du prêt, grade A-G, antécédent de
   défaut) ;
 - valeurs manquantes : `person_emp_length` (~2,7 %) et `loan_int_rate` (~9,6 %) ;
 - quelques valeurs aberrantes (âges > 120 ans) supprimées au nettoyage (7 lignes).
@@ -113,7 +113,7 @@ reproductibilité.
 
 - l'**entraînement** sert à apprendre les paramètres des modèles ;
 - la **validation** sert uniquement à choisir les hyperparamètres (profondeur de
-  l'arbre, k du k-NN, seuils de décision) — critère : F1-score ;
+  l'arbre, k du k-NN, seuils de décision) - critère : F1-score ;
 - le **test** n'est utilisé qu'une seule fois, à la fin, pour mesurer la performance de
   généralisation réelle.
 
@@ -122,7 +122,7 @@ hyperparamètres sur le test (ce qui surestimerait les performances).
 
 ## 6. Métriques
 
-Accuracy, précision, rappel, F1-score, matrice de confusion, courbe ROC et AUC —
+Accuracy, précision, rappel, F1-score, matrice de confusion, courbe ROC et AUC -
 toutes implémentées from scratch dans `src/metrics.py` et sauvegardées dans
 `results/metrics.json`. Dans le contexte bancaire, le **faux négatif** (défaut non
 détecté → crédit accordé à tort) est l'erreur la plus coûteuse, d'où l'attention portée
@@ -147,7 +147,7 @@ python3 -m pytest tests/ -v       # tests (11 tests)
 # ou : make run / make compare / make test
 ```
 
-**Avec Docker (optionnel — exécution reproductible sans installer les dépendances) :**
+**Avec Docker (optionnel - exécution reproductible sans installer les dépendances) :**
 
 ```bash
 docker build -t credit-risk .   # construit l'image (lance aussi les 11 tests)
@@ -167,7 +167,7 @@ interactions non linéaires (ex. ratio prêt/revenu × grade) qu'un modèle lin�
 capture pas. Le k-NN se place entre les deux.
 
 **Vérification scikit-learn** (mêmes données, mêmes hyperparamètres) : écart d'AUC
-≤ 0,0005 pour les trois modèles — les implémentations from scratch sont validées
+≤ 0,0005 pour les trois modèles - les implémentations from scratch sont validées
 (`results/sklearn_comparison.json`).
 
 ## 10. Limites
@@ -188,4 +188,4 @@ capture pas. Le k-NN se place entre les deux.
 
 ---
 
-**Année académique 2025-2026 — dernière mise à jour : juin 2026**
+**Année académique 2025-2026 - dernière mise à jour : juin 2026**
