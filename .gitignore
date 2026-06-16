@@ -24,6 +24,15 @@ __pycache__/
 *.swp
 *.swo
 
+# LaTeX - fichiers intermédiaires de compilation (le PDF reste suivi)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
 # OS
 .DS_Store
 Thumbs.db

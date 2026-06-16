@@ -10,6 +10,10 @@ Usage   : Document de présentation, d'installation et d'exécution du projet.
 ======================================================================================
 -->
 
+<p align="center">
+  <img src="reports/latex/page_de_presentation.png" alt="Prédiction du risque de crédit bancaire - page de présentation" width="430">
+</p>
+
 # Prédiction du Risque de Crédit Bancaire
 
 **Projet M1 Informatique - Techniques d'Apprentissage Artificiel**

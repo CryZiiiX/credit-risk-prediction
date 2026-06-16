@@ -47,6 +47,7 @@
 
 % ===== Figures et tableaux =====
 \usepackage{graphicx}
+\usepackage{eso-pic}              % image de couverture en pleine page (A4)
 % Les figures sont lues directement depuis les sorties du programme :
 %   reports/figures/        : figures générées par python3 main.py
 %   data/stats/             : figures d'exploration des données (EDA)
@@ -126,38 +127,11 @@
 % Page de garde
 % ============================================================================
 \begin{titlepage}
-  \centering
-
-  {\large Université Paris 8 - Vincennes-Saint-Denis\\[0.3em]
-   Master 1 Big Data\par}
-
-  \vspace{2.2cm}
-
-  {\Large Projet de\\[0.4em]
-   {\bfseries Techniques d'Apprentissage Artificiel}\par}
-
-  \vspace{2.2cm}
-
-  \rule{\linewidth}{0.8pt}\\[1.4em]
-  {\huge\bfseries Prédiction du Risque\\[0.4em] de Crédit Bancaire\par}
-  \vspace{1.1em}
-  {\large Comparaison de trois méthodes d'apprentissage supervisé\\[0.2em]
-   implémentées \emph{from scratch} en Python\par}
-  \vspace{1.4em}
-  \rule{\linewidth}{0.8pt}
-
-  \vfill
-
-  {\large\bfseries Maxime BRONNY\\[0.3em]}
-  {\large N\textsuperscript{o} étudiant : 19009314\par}
-  % Enseignante : à compléter si souhaité
-  % {\large Enseignante : Mme ...\par}
-
-  \vspace{1.6cm}
-
-  {\large Année universitaire 2025-2026\\[0.3em]
-   Rendu : juin 2026\par}
-
+  % Couverture : page de présentation graphique (image A4 pleine page).
+  % L'ancienne page de garde LaTeX est conservée dans l'historique git.
+  \AddToShipoutPictureBG*{\AtPageLowerLeft{%
+    \includegraphics[width=\paperwidth,height=\paperheight]{page_de_presentation.png}}}
+  \null
 \end{titlepage}
 
 % ============================================================================
