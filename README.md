@@ -11,7 +11,7 @@ Usage   : Document de présentation, d'installation et d'exécution du projet.
 -->
 
 <p align="center">
-  <img src="reports/latex/page_de_presentation.png" alt="Prédiction du risque de crédit bancaire - page de présentation" width="430">
+  <img src="docs/page_de_presentation.png" alt="Prédiction du risque de crédit bancaire - page de présentation" width="430">
 </p>
 
 # Prédiction du Risque de Crédit Bancaire
@@ -89,18 +89,18 @@ PROGRAMME/
 │   ├── sklearn_comparison.json  # Vérification from scratch vs sklearn
 │   └── models/*.pkl        # Modèles entraînés
 ├── reports/
-│   ├── figures/            # 7 figures générées pour le rapport
-│   └── latex/              # Rapport LaTeX (main.tex, sections/, bibliographie)
+│   └── figures/            # 7 figures générées (sorties de main.py)
 └── docs/
-    └── rapport/            # Rapport final au format PDF
+    ├── rapport/            # Rapport final au format PDF (le livrable)
+    └── schema_execution_taa/  # Schéma d'exécution (PNG/PDF/SVG + générateur)
 ```
 
 > L'ancienne version C et les sauvegardes intermédiaires sont conservées en dehors
 > de ce dossier (dans le dossier parent `PROJET/`) afin de ne garder ici que les
 > fichiers utiles au rendu final.
 
-📄 **Rapport** : le rapport final au format PDF se trouve dans `docs/rapport/` ;
-ses sources LaTeX (compilables) sont dans `reports/latex/`.
+📄 **Rapport** : le livrable est le PDF final dans `docs/rapport/`. Les sources LaTeX
+ne sont pas versionnées dans le dépôt (conservées localement).
 
 ## 4. Algorithmes implémentés (from scratch)
 

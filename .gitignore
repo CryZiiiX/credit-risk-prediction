@@ -24,7 +24,9 @@ __pycache__/
 *.swp
 *.swo
 
-# LaTeX - fichiers intermédiaires de compilation (le PDF reste suivi)
+# LaTeX - sources et compilation du rapport exclus du dépôt
+# (seul le PDF final docs/rapport/ est versionné ; sources gardées en local)
+reports/latex/
 *.aux
 *.log
 *.out
