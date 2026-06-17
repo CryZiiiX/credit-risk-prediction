@@ -12,7 +12,7 @@
 # L'ancien Makefile (compilation C) est conservé dans
 # archive_obsolete/ancienne_version_c/Makefile.root.old
 
-.PHONY: run compare test install clean help
+.PHONY: run compare test install clean stats help
 
 help:
 	@echo "Cibles disponibles :"
@@ -20,6 +20,7 @@ help:
 	@echo "  make run      - exécute le pipeline complet (python3 main.py)"
 	@echo "  make compare  - pipeline + vérification scikit-learn"
 	@echo "  make test     - lance les tests (pytest)"
+	@echo "  make stats    - (re)génère l'analyse exploratoire (scripts/ -> data/stats/)"
 	@echo "  make clean    - supprime les fichiers générés par le pipeline"
 
 install:
@@ -33,6 +34,12 @@ compare:
 
 test:
 	python3 -m pytest tests/ -v
+
+stats:
+	python3 scripts/explore_data.py
+	python3 scripts/detect_outliers.py
+	python3 scripts/analyze_missing_values.py
+	python3 scripts/plot_sigmoid.py
 
 clean:
 	rm -f results/metrics.json results/predictions.csv results/sklearn_comparison.json

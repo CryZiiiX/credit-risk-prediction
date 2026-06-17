@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 OUT_DIR = Path(__file__).resolve().parent
-W, H = 200.0, 300.0  # repere logique du schema (x : 0-200, y : 0-300)
+W, H = 200.0, 346.0  # repere logique du schema (x : 0-200, y : 0-346)
 
 # --------------------------------------------------------------------------------------
 # Palette pastel (remplissage, bordure) par type de bloc
@@ -104,7 +104,7 @@ def phase_band(ax, y0, y1, label):
 
 
 def build():
-    fig = plt.figure(figsize=(10.0, 15.0), dpi=200)
+    fig = plt.figure(figsize=(10.0, 17.3), dpi=200)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, W)
     ax.set_ylim(0, H)
@@ -112,11 +112,32 @@ def build():
     fig.patch.set_facecolor(BG)
 
     # ----- Titre et sous-titre -----
-    ax.text(100, 291.5, "Projet TAA - Schéma d'exécution des scripts",
+    ax.text(100, 338, "Projet TAA - Schéma d'exécution des scripts",
             ha="center", va="center", fontsize=17, fontweight="bold", color=INK)
-    ax.text(100, 283.5, "Pipeline Python - données, modèles, métriques et rapport",
+    ax.text(100, 330, "Pipeline Python - données, modèles, métriques et rapport",
             ha="center", va="center", fontsize=10.5, color="#6A7280")
-    ax.plot([18, 182], [279, 279], color="#D5DCE5", lw=1.1, zorder=0)
+    ax.plot([18, 182], [325, 325], color="#D5DCE5", lw=1.1, zorder=0)
+
+    # ----- Phase préliminaire : analyse exploratoire (EDA), lancée séparément -----
+    ax.add_patch(FancyBboxPatch((5, 297), 192, 24,
+                                boxstyle="round,pad=0,rounding_size=2.5",
+                                fc=BAND_FILL, ec=BAND_EDGE, lw=1.1, zorder=0))
+    ax.text(9, 318.2, "Phase préliminaire - Analyse exploratoire (EDA)",
+            ha="left", va="center", fontsize=8.6, fontweight="bold",
+            color="#3A4456", zorder=0.5)
+    box(ax, "raw_eda", 30, 307, 44, 12.5, "data/raw/", "credit_risk_dataset.csv",
+        "file", sub_size=6.0)
+    box(ax, "eda", 96, 307, 62, 14.5, "scripts/ (EDA)",
+        "explore_data, detect_outliers,\nanalyze_missing_values, plot_sigmoid",
+        "script", title_size=8, sub_size=5.9)
+    box(ax, "stats_eda", 163, 306, 62, 18, "data/stats/",
+        "12 fichiers : distributions,\ncorrélations, outliers, manquantes,\ngrade, sigmoïde\n(target_distribution -> rapport)",
+        "file", sub_size=5.6)
+    arrow(ax, "raw_eda", "R", "eda", "L", "data")
+    arrow(ax, "eda", "R", "stats_eda", "L", "data")
+    ax.text(100, 288, "Le pipeline principal ci-dessous (main.py) est lancé séparément "
+            "et réutilise data/raw/.", ha="center", va="center", fontsize=7,
+            style="italic", color="#7A8088")
 
     # ----- Colonne de stockage (a droite) -----
     ax.add_patch(FancyBboxPatch((155, 93), 42, 157,

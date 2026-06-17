@@ -1,0 +1,16 @@
+Figure 8 : Valeurs manquantes - Analyse détaillée
+============================================================
+
+Variable                       Manquantes      %          Pattern                                 
+-----------------------------------------------------------------------------------------------
+person_emp_length              895             2.75       Aléatoire (MCAR)                        
+loan_int_rate                  3116            9.56       Aléatoire (MCAR)                        
+
+============================================================
+INTERPRÉTATION
+============================================================
+MCAR (Missing Completely At Random) : les valeurs manquantes sont aléatoires
+et ne sont pas corrélées avec d'autres variables observées.
+
+Total de valeurs manquantes dans le dataset: 4011
+Nombre de variables affectées: 2

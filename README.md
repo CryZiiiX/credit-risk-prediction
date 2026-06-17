@@ -73,11 +73,16 @@ PROGRAMME/
 │   ├── metrics.py          # Métriques from scratch (accuracy → AUC-ROC)
 │   ├── visualization.py    # Figures du rapport
 │   └── models/             # Les 3 algorithmes from scratch
+├── scripts/                # Analyse exploratoire (EDA), génère data/stats/
+│   ├── explore_data.py     # Distributions, corrélations, taux de défaut par grade
+│   ├── detect_outliers.py  # Valeurs aberrantes (méthodes IQR et z-score)
+│   ├── analyze_missing_values.py  # Analyse des valeurs manquantes
+│   └── plot_sigmoid.py     # Illustration de la fonction sigmoïde
 ├── tests/                  # Tests pytest (11 tests)
 ├── data/
 │   ├── raw/                # Dataset brut (inchangé)
 │   ├── splits/             # train.csv / val.csv / test.csv (générés)
-│   └── stats/              # Analyse exploratoire (figures, stats)
+│   └── stats/              # Analyse exploratoire (générée par scripts/)
 ├── results/
 │   ├── metrics.json        # Toutes les métriques (3 modèles × train/test)
 │   ├── predictions.csv     # Prédictions et probabilités sur le test
@@ -148,7 +153,8 @@ ou utilisez un environnement virtuel `python3 -m venv .venv && source .venv/bin/
 python3 main.py                    # pipeline complet (~20 s)
 python3 main.py --compare-sklearn  # + vérification avec scikit-learn
 python3 -m pytest tests/ -v       # tests (11 tests)
-# ou : make run / make compare / make test
+make stats                         # (re)génère l'analyse exploratoire (data/stats/)
+# ou : make run / make compare / make test / make stats
 ```
 
 **Avec Docker (optionnel - exécution reproductible sans installer les dépendances) :**

@@ -22,6 +22,9 @@ pandas>=1.5.0
 # Génération des figures du rapport (reports/figures/)
 matplotlib>=3.6.0
 
+# Figures de l'analyse exploratoire (scripts/ -> data/stats/)
+seaborn>=0.12.0
+
 # UNIQUEMENT pour la vérification des implémentations from scratch
 # (option --compare-sklearn) — jamais utilisé comme solution principale
 scikit-learn>=1.2.0

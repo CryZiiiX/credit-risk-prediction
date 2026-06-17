@@ -11,6 +11,14 @@ flowchart TB
   classDef file    fill:#E5E5E8,stroke:#9A9AA1,color:#2B2F36;
   classDef manual  fill:#F7E4A9,stroke:#C9A94E,color:#2B2F36;
 
+  subgraph PEDA["Phase préliminaire - Analyse exploratoire (EDA, lancée séparément)"]
+    RAW0[("data/raw/ credit_risk_dataset.csv")]:::file
+    EDA["scripts/ (EDA) - explore_data, detect_outliers, analyze_missing_values, plot_sigmoid"]:::script
+    STATS[("data/stats/ 12 fichiers : distributions, corrélations, outliers, manquantes, taux par grade, sigmoïde")]:::file
+    RAW0 -.-> EDA
+    EDA -.-> STATS
+  end
+
   USER["Utilisateur - python3 main.py"]:::manual
   MAIN["main.py - orchestrateur (run_pipeline)"]:::script
   USER --> MAIN

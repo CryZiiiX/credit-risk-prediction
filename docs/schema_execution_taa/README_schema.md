@@ -14,11 +14,17 @@ en distinguant l'ordre d'execution du flux de donnees.
 
 `main.py` (orchestrateur), `src/data_loader.py`, `src/preprocessing.py`,
 `src/split_data.py`, `src/metrics.py`, `src/visualization.py`,
-`src/models/{logistic_regression,decision_tree,knn}.py`, ainsi que les dossiers
-reels `data/`, `results/`, `reports/figures/` et `reports/latex/`.
+`src/models/{logistic_regression,decision_tree,knn}.py`, les scripts d'analyse
+exploratoire `scripts/{explore_data,detect_outliers,analyze_missing_values,plot_sigmoid}.py`,
+ainsi que les dossiers reels `data/`, `results/`, `reports/figures/` et `reports/latex/`.
 
-## Logique du pipeline (telle qu'executee par main.py)
+## Logique du pipeline
 
+- **Phase preliminaire - Analyse exploratoire (EDA)** : les scripts du dossier
+  `scripts/` (`explore_data.py`, `detect_outliers.py`, `analyze_missing_values.py`,
+  `plot_sigmoid.py`) lisent `data/raw/` et generent les 12 fichiers de `data/stats/`
+  (distributions, correlations, aberrations, valeurs manquantes, taux de defaut par
+  grade, sigmoide). Lancee separement du pipeline principal via `make stats`.
 - **Phase 0 - Preparation des donnees** : `data_loader.load_raw_data()` lit
   `data/raw/credit_risk_dataset.csv`, puis `preprocessing.clean_outliers()`.
 - **Phase 1 - Pretraitement et decoupage** : `encode_categoricals()`,
