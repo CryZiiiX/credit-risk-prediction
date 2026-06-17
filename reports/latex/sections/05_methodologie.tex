@@ -64,6 +64,19 @@ de sélection sur validation, pas de mener une recherche exhaustive.
 L'expérience complète est reproductible (graine fixe, une seule commande) et
 s'exécute en une vingtaine de secondes.
 
+La figure~\ref{fig:schema_execution} résume l'enchaînement complet des scripts,
+de la lecture des données brutes jusqu'à l'intégration des résultats dans ce
+rapport, en distinguant l'ordre d'exécution (flèche pleine) du flux de données
+(flèche pointillée).
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[height=0.9\textheight]{schema_execution_taa.pdf}
+  \caption{Schéma d'exécution des scripts du projet : enchaînement du pipeline
+    Python, des données aux modèles, puis aux métriques, figures et rapport.}
+  \label{fig:schema_execution}
+\end{figure}
+
 \subsection{Métriques d'évaluation}
 
 Toutes les métriques sont implémentées from scratch

@@ -1,0 +1,67 @@
+%% Projet TAA - Schema d'execution des scripts (version Mermaid editable)
+%% Rendu : https://mermaid.live  ou  l'extension Mermaid de votre editeur.
+%% Fleche pleine ( --> ) = ordre d'execution
+%% Fleche pointillee ( -.-> ) = flux de donnees / fichiers generes
+flowchart TB
+  classDef script  fill:#BCD4EE,stroke:#5E82AC,color:#2B2F36;
+  classDef process fill:#C4E6C1,stroke:#6BA66B,color:#2B2F36;
+  classDef model   fill:#D9CAEB,stroke:#9A7CC2,color:#2B2F36;
+  classDef metric  fill:#B4E3DB,stroke:#57A296,color:#2B2F36;
+  classDef result  fill:#F6CAD7,stroke:#CC7C95,color:#2B2F36;
+  classDef file    fill:#E5E5E8,stroke:#9A9AA1,color:#2B2F36;
+  classDef manual  fill:#F7E4A9,stroke:#C9A94E,color:#2B2F36;
+
+  USER["Utilisateur - python3 main.py"]:::manual
+  MAIN["main.py - orchestrateur (run_pipeline)"]:::script
+  USER --> MAIN
+
+  subgraph P0["Phase 0 - Préparation des données"]
+    CSV[("data/raw/ credit_risk_dataset.csv")]:::file
+    LOAD["data_loader.py - load_raw_data()"]:::script
+    CLEAN["preprocessing.py - clean_outliers()"]:::process
+    CSV -.-> LOAD
+    LOAD --> CLEAN
+  end
+  MAIN --> LOAD
+
+  subgraph P1["Phase 1 - Prétraitement et découpage"]
+    ENC["preprocessing.py - encode_categoricals()"]:::process
+    SPLIT["split_data.py - stratified_split() 70/15/15"]:::process
+    SCALE["preprocessing.py - MedianImputer + StandardScaler"]:::process
+    SPLITS[("data/splits/ train.csv, val.csv, test.csv")]:::file
+    ENC --> SPLIT --> SCALE
+    SPLIT -.-> SPLITS
+  end
+  CLEAN --> ENC
+
+  subgraph P2["Phase 2 - Entraînement des modèles (from scratch)"]
+    LR["logistic_regression.py - descente de gradient"]:::model
+    DT["decision_tree.py - arbre CART (Gini)"]:::model
+    KNN["knn.py - k plus proches voisins"]:::model
+  end
+  SCALE --> LR
+  SCALE --> DT
+  SCALE --> KNN
+
+  subgraph P3["Phase 3 - Évaluation, métriques et figures"]
+    MET["metrics.py - accuracy, précision, rappel, F1, AUC, matrice de confusion"]:::metric
+    VIZ["visualization.py - génération des figures"]:::metric
+    RES[("results/ metrics.json, predictions.csv, models/*.pkl, sklearn_comparison.json (option --compare-sklearn)")]:::file
+    FIG[("reports/figures/ 7 figures .png")]:::file
+    MET --> VIZ
+    MET -.-> RES
+    VIZ -.-> FIG
+  end
+  LR --> MET
+  DT --> MET
+  KNN --> MET
+
+  subgraph P4["Phase 4 - Intégration au rapport LaTeX"]
+    TEX["reports/latex/ main.tex + sections/"]:::result
+    PDFLATEX["pdflatex - compilation (x2)"]:::manual
+    PDF[("docs/rapport/ rapport.pdf")]:::result
+    TEX --> PDFLATEX
+    PDFLATEX -.-> PDF
+  end
+  FIG -.-> TEX
+  RES -.-> TEX
