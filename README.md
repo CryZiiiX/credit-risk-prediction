@@ -16,7 +16,7 @@ Usage   : Document de présentation, d'installation et d'exécution du projet.
 
 # Prédiction du Risque de Crédit Bancaire
 
-**Projet M1 Informatique - Techniques d'Apprentissage Artificiel**
+**Projet M1 Informatique Big Data - Techniques d'Apprentissage Artificiel**
 **Auteur : Maxime BRONNY - Université Paris 8**
 
 Pipeline complet d'apprentissage automatique en **Python**, avec trois algorithmes de
@@ -154,7 +154,7 @@ python3 main.py                    # pipeline complet (~20 s)
 python3 main.py --compare-sklearn  # + vérification avec scikit-learn
 python3 -m pytest tests/ -v       # tests (11 tests)
 make stats                         # (re)génère l'analyse exploratoire (data/stats/)
-# ou : make run / make compare / make test / make stats
+# ou : make run / make compare / make test
 ```
 
 **Avec Docker (optionnel - exécution reproductible sans installer les dépendances) :**

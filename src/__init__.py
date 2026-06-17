@@ -10,7 +10,7 @@
 
 """Pipeline de prédiction du risque de crédit bancaire.
 
-Projet M1 — Techniques d'Apprentissage Artificiel.
+Projet M1 - Techniques d'Apprentissage Artificiel.
 Tous les algorithmes sont implémentés from scratch (numpy/pandas) ;
 scikit-learn n'est utilisé que pour vérifier les implémentations.
 """
